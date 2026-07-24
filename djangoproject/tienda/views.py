@@ -4,6 +4,7 @@ import string
 from datetime import datetime
 import re
 import traceback
+import uuid
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -137,12 +138,21 @@ def registro(request):
     password2 = request.POST.get("password2")
 
     if password1 != password2:
-        return render(request, "registrarse.html", {"error": "Las contraseñas no coinciden"})
+        return render(
+            request,
+            "registrarse.html",
+            {"error": "Las contraseñas no coinciden"},
+        )
 
     if settings.MONGO_COLLECTION.find_one({"gmail": gmail}):
-        return render(request, "registrarse.html", {"error": "El correo ya está registrado"})
+        return render(
+            request,
+            "registrarse.html",
+            {"error": "El correo ya está registrado"},
+        )
 
     usuario = {
+        "id": str(uuid.uuid4()),  # <--- Asigna clave única
         "username": username,
         "gmail": gmail,
         "password": password1,
@@ -158,9 +168,6 @@ def registro(request):
     DeseosManager.migrar_sesion_a_mongo(request)
 
     return redirect("menu")
-
-# Alias por compatibilidad
-registrar_usuario = registro
 
 
 def cerrarSes(request):
