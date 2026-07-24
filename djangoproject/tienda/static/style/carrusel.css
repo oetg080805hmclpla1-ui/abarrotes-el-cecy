@@ -1,0 +1,16 @@
+:root {
+    --negro-profundo: #0A0A0A;
+    --blanco-puro: #FFFFFF;
+    --oro-metalico: #D4AF37;
+    --plateado-suave: #C0C0C0;
+    --azul-navy: #1A1F71;
+    --burdeos-profundos: #5B0E2D;
+    --verde-esmeralda: #046307;
+    --gris-carbon: #1b1a1a;
+}
+
+* {
+    font-family: "Domine", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}

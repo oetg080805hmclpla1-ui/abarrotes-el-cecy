@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - abarrotes el cecy {% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="mb-4"><i class="fas fa-credit-card"></i> Finalizar Compra</h2>
+
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">
+                        <i class="fas fa-user"></i> Información de Envío
+                    </h4>
+
+                    <form id="form-checkout">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre completo *</label>
+                                <input type="text" class="form-control" name="nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teléfono *</label>
+                                <input type="tel" class="form-control" name="telefono" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Dirección *</label>
+                            <input type="text" class="form-control" name="direccion" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ciudad *</label>
+                                <input type="text" class="form-control" name="ciudad" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Código Postal *</label>
+                                <input type="text" class="form-control" name="codigo_postal" required>
+                            </div>
+                        </div>
+
+                        <h5 class="mt-4 mb-3">
+                            <i class="fas fa-credit-card"></i> Método de Pago
+                        </h5>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="metodo_pago" value="tarjeta" checked>
+                                <label class="form-check-label">
+                                    <i class="fas fa-credit-card"></i> Tarjeta de Crédito/Débito
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="metodo_pago" value="paypal">
+                                <label class="form-check-label">
+                                    <i class="fab fa-paypal"></i> PayPal
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="tarjeta-info">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Número de Tarjeta</label>
+                                    <input type="text" class="form-control" name="numero_tarjeta" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">Expira</label>
+                                    <input type="text" class="form-control" name="fecha_expiracion" placeholder="MM/AA">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" class="form-control" name="cvv" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">
+                        <i class="fas fa-receipt"></i> Resumen del Pedido
+                    </h4>
+
+                    <div class="mb-3">
+                        {% for producto in productos %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>{{ producto.nombre }} (x{{ producto.cantidad }})</span>
+                            <span>${{ producto.subtotal|floatformat:2 }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal:</span>
+                        <span>${{ total|floatformat:2 }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Envío:</span>
+                        <span>$0.00</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Impuestos (15%):</span>
+                        <span>${{ impuestos|floatformat:2 }}</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <strong class="fs-5">Total:</strong>
+                        <strong class="fs-4 text-primary">${{ total_con_impuestos|floatformat:2 }}</strong>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success btn-lg py-3" id="confirmar-compra">
+                            <i class="fas fa-lock"></i> Confirmar y Pagar
+                        </button>
+                        <a href="{% url 'carrito' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left"></i> Volver al Carrito
+                        </a>
+                    </div>
+
+                    <p class="text-muted small mt-3">
+                        <i class="fas fa-lock"></i> Tu información está protegida con encriptación SSL.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+
+<script>
+    function getCSRFToken() {
+        let csrfToken = '';
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith('csrftoken=')) {
+                csrfToken = cookie.substring('csrftoken='.length, cookie.length);
+                break;
+            }
+        }
+        return csrfToken;
+    }
+
+    $(document).ready(function () {
+        // Cambiar visibilidad de campos de tarjeta
+        $('input[name="metodo_pago"]').change(function () {
+            if ($(this).val() === 'tarjeta') {
+                $('#tarjeta-info').show();
+            } else {
+                $('#tarjeta-info').hide();
+            }
+        });
+
+        // Confirmar compra
+        $('#confirmar-compra').click(function () {
+            const boton = $(this);
+            const originalText = boton.html();
+
+            // Validar formulario HTML5
+            const form = $('#form-checkout')[0];
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            boton.html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+            boton.prop('disabled', true);
+
+            const formData = new FormData(form);
+
+            $.ajax({
+                url: "{% url 'procesar_compra' %}",
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        mostrarToast('success', response.message);
+
+                        setTimeout(function () {
+                            if (response.redirect) {
+                                window.location.href = response.redirect;
+                            } else {
+                                window.location.href = '/';
+                            }
+                        }, 1500);
+                    } else {
+                        if (response.require_login) {
+                            mostrarToast('error', response.message);
+                            setTimeout(function () {
+                                window.location.href = "{% url 'index' %}";
+                            }, 2000);
+                        } else {
+                            mostrarToast('error', response.message);
+                            boton.html(originalText);
+                            boton.prop('disabled', false);
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    mostrarToast('error', 'Error al procesar la compra. Inténtalo de nuevo.');
+                    boton.html(originalText);
+                    boton.prop('disabled', false);
+                }
+            });
+        });
+
+        function mostrarToast(tipo, mensaje) {
+            const alertClass = tipo === 'success' ? 'alert-success' : 'alert-danger';
+            const icon = tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+
+            const notif = document.createElement('div');
+            notif.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+            notif.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notif.innerHTML = `
+                <i class="fas ${icon} me-2"></i>
+                ${mensaje}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+
+            document.body.appendChild(notif);
+            const bsAlert = new bootstrap.Alert(notif);
+
+            setTimeout(() => {
+                if (notif.parentNode) bsAlert.close();
+            }, 4000);
+        }
+    });
+</script>
+
+{% endblock %}

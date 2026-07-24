@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'style/menu.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+<main>
+
+    <div class="cards reveal-fade">
+        <ul class="tienda">
+            <li class="list reveal card-despensa">
+                <a href="plantilla" tabindex="-1"><span></span></a>
+                <button class="btn-despensa"></button>
+            </li>
+
+            <li class="list reveal card-frutas">        
+                <a href="plantilla"><span></span></a>
+                <button class="btn-frutas"></button>
+            </li>
+
+            <li class="list reveal card-limpieza">
+                <a href="plantilla"><span></span></a>
+                <button class="btn-limpieza"></button>
+            </li>
+
+            <li class="list reveal card-abarrotes">
+                <a href="plantilla"><span></span></a>
+                <button class="btn-abarrotes"></button>
+            </li>
+        </ul>   
+        <div id="PRODUCTOS"></div>
+
+    </div>
+
+    <div class="title-h2-most-vent reveal-fade">
+        <h2 class="section-title">NUESTROS DEPARTAMENTOS:</h2>
+    </div>
+
+    <div class="most-vent reveal-fade">
+        <button type="button" class="btn-most-vent" disabled>
+            <i class="fa-solid fa-angle-left"></i>
+        </button>
+
+        <div class="nose reveal-left">
+
+            <div class="content reveal-left">
+                <img src="{% static 'style/despensa.jpeg' %}" alt="Abarrotes y Despensa" class="card-img">
+                <div class="card-content">
+                    <h2 class="card-title">Abarrotes y Despensa</h2>
+                    <p class="card-description">Encuentra frijol, arroz, aceite y todo lo básico para tu hogar.</p>
+                    <a href="{% url 'productos_por_categoria' 'despensa' %}" class="card-button">Ver productos</a>
+                </div>
+            </div>
+
+            <div class="content reveal-left">
+                <img src="{% static 'style/abarrotes.jpeg' %}" alt="Bebidas y Botanas" class="card-img">
+                <div class="card-content">
+                    <h2 class="card-title">Bebidas y Botanas</h2>
+                    <p class="card-description">Refrescos, jugos, aguas y las mejores botanas para compartir.</p>
+                    <a href="{% url 'productos_por_categoria' 'bebidas' %}" class="card-button">Ver productos</a>
+                </div>
+            </div>
+
+            <div class="content reveal-left">
+                <img src="{% static 'style/frutas.jpeg' %}" alt="Lácteos y Salchichonería" class="card-img">
+                <div class="card-content">
+                    <h2 class="card-title">Lácteos y Salchichonería</h2>
+                    <p class="card-description">Quesos, jamón, salchichas, leche y más productos frescos.</p>
+                    <a href="{% url 'productos_por_categoria' 'lacteos' %}" class="card-button">Ver productos</a>
+                </div>
+            </div>
+
+            <div class="content reveal-left">
+                <img src="{% static 'style/llimpieza.jpeg' %}" alt="Limpieza del Hogar" class="card-img">
+                <div class="card-content">
+                    <h2 class="card-title">Limpieza del Hogar</h2>
+                    <p class="card-description">Detergentes, jabones, cloro y artículos para el cuidado de tu casa.</p>
+                    <a href="{% url 'productos_por_categoria' 'limpieza' %}" class="card-button">Ver productos</a>
+                </div>
+            </div>
+
+            <div class="content reveal-left">
+                <img src="{% static 'style/abarrotes.jpeg' %}" alt="Cuidado Personal" class="card-img">
+                <div class="card-content">
+                    <h2 class="card-title">Cuidado Personal</h2>
+                    <p class="card-description">Shampoo, jabón de tocador, pasta dental y más artículos de higiene.</p>
+                    <a href="{% url 'productos_por_categoria' 'cuidado-personal' %}" class="card-button">Ver productos</a>
+                </div>
+            </div>
+
+        </div>
+
+        <button type="button" class="btn-most-vent">
+            <i class="fa-solid fa-angle-right"></i>
+        </button>
+    </div>
+
+    <section class="featured reveal-fade" id="destacado">
+        <div class="featured-content reveal-fade">
+            <div class="featured-image reveal-fade">
+                <div class="product-showcase reveal-fade">
+                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=500&h=500&auto=format&fit=crop"
+                        alt="Frescura y Calidad" class="product-img">
+                </div>
+            </div>
+            <div class="featured-text reveal-fade">
+                <h2>CALIDAD Y<br>PRECIO JUSTO</h2>
+                <p>En Abarrotes El Cecy nos esforzamos todos los días para ofrecerte los productos más frescos y de la mejor calidad. Surtimos nuestra tienda pensando en la economía y el bienestar de tu familia.</p>
+                <a href="/productos/" class="cta-button">VER CATÁLOGO</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="serviciosElegance reveal-fade">
+        <div class="sub-content reveal-fade">
+            <div class="service-title reveal-fade">
+                <h2 class="section-title reveal-fade">
+                    ATENCIÓN A CLIENTES
+                </h2>
+            </div>
+            <div class="services reveal-fade">
+                <div class="servicios reveal-fade">
+                    <h3>Visítanos o Contáctanos</h3>
+                    <a href="/contacto/">
+                        <img src="{% static 'style/abarrotes.jpeg' %}" alt="Contacto">
+                    </a>
+                    <p>
+                        Estamos ubicados en Sta Maria Guadalupe las Torres. ¡Ven a conocernos o mándanos un mensaje para resolver tus dudas!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<button id="topBtn">↑</button>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+
+<script src="{% static 'java/banners.js' %}"></script>
+<script src="{% static 'java/btnTop.js' %}"></script>
+<script src="{% static 'java/menu-products.js' %}"></script>
+<script src="{% static 'java/scroll.js' %}"></script>
+<script src="{% static 'java/nav-top.js' %}"></script>
+
+{% endblock %}

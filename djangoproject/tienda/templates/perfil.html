@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/perfil.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="perfil-container">
+    <!-- Header simple -->
+    <div class="perfil-header">
+        <div class="perfil-avatar">
+            <div class="avatar-default">
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+
+        <div class="perfil-info-header">
+            <h1 class="perfil-username">{{ request.session.username }}</h1>
+            <p class="perfil-email">{{ request.session.gmail }}</p>
+
+            <div class="perfil-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ lista_deseos_count }}</span>
+                    <span class="stat-label">Lista Deseos</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">{{ carrito_count }}</span>
+                    <span class="stat-label">Carrito</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solo 2 tabs: Info y Pedidos -->
+    <div class="perfil-tabs">
+        <button class="tab-btn active" data-tab="info">Información</button>
+        <button class="tab-btn" data-tab="pedidos">Mis Pedidos</button>
+    </div>
+
+    <!-- Contenido simple -->
+    <div class="perfil-content">
+
+        <!-- Tab 1: Info básica -->
+        <div class="tab-content active" id="tab-info">
+            <div class="info-card">
+                <h3><i class="fas fa-user"></i> Información del usuario</h3>
+
+                <div class="user-info">
+                    <p><strong>Nombre:</strong> {{ request.session.username }}</p>
+                    <p><strong>Email:</strong> {{ request.session.gmail }}</p>
+                    <p><strong>Miembro desde:</strong> {{ fecha_registro|date:"d/m/Y" }}</p>
+                </div>
+
+                <div class="user-actions">
+                    <a href="/cerrar" class="btn-cerrar-sesion">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Pedidos (si existen) -->
+        <div class="tab-content" id="tab-pedidos">
+            {% if pedidos %}
+            <div class="pedidos-container">
+                {% for pedido in pedidos|slice:":5" %}
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <span class="pedido-id">Pedido #{{ pedido.pedido_id|slice:":8" }}</span>
+                        <span class="pedido-fecha">{{ pedido.fecha_creacion|date:"d/m/Y" }}</span>
+                    </div>
+
+                    <div class="pedido-info">
+                        <p><strong>Estado:</strong> {{ pedido.estado|title }}</p>
+                        <p><strong>Total:</strong> ${{ pedido.total|floatformat:2 }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>No tienes pedidos aún</h3>
+                <a href="{% url 'menu' %}" class="btn-comprar-ahora">
+                    <i class="fas fa-store"></i> Comprar ahora
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+
+
+<script src="{% static 'java/perfil.js' %}"></script>
+
+{% endblock %}

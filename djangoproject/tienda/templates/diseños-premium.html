@@ -1,0 +1,550 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    /* ESTILOS ESPECIALES PARA ÉLÉGANCE */
+    .diseno-hero {
+        background: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.9)),
+            url('https://images.unsplash.com/photo-1624978983107-3082b6b0fb40?q=80&w=1920&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+        padding: 120px 20px;
+        margin-bottom: 80px;
+        border-bottom: 1px solid var(--oro-metalico);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .diseno-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+        animation: shine 8s infinite linear;
+    }
+
+    @keyframes shine {
+        0% {
+            transform: translateX(-100%);
+        }
+
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    .diseno-hero h1 {
+        font-family: 'Domine', serif;
+        font-size: 4.5rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--blanco-puro);
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        position: relative;
+        display: inline-block;
+    }
+
+    .diseno-hero h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 3px;
+        background: linear-gradient(to right, transparent, var(--oro-metalico), transparent);
+    }
+
+    .diseno-hero p {
+        font-size: 1.3rem;
+        max-width: 800px;
+        margin: 0 auto 50px;
+        color: var(--plateado-suave);
+        line-height: 1.8;
+        font-weight: 300;
+    }
+
+    /* SECCIÓN DE FILOSOFÍA */
+    .filosofia-elegance {
+        max-width: 1200px;
+        margin: 0 auto 100px;
+        padding: 0 30px;
+    }
+
+    .filosofia-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 40px;
+        margin-top: 60px;
+    }
+
+    .filosofia-card {
+        background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+        border-radius: 12px;
+        padding: 40px 30px;
+        text-align: center;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .filosofia-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(to right, var(--oro-metalico), var(--plateado-suave));
+    }
+
+    .filosofia-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--oro-metalico);
+        box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15);
+    }
+
+    .filosofia-icon {
+        font-size: 3rem;
+        color: var(--oro-metalico);
+        margin-bottom: 25px;
+        display: block;
+    }
+
+    .filosofia-titulo {
+        font-size: 1.8rem;
+        color: var(--blanco-puro);
+        margin-bottom: 20px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .filosofia-desc {
+        color: var(--plateado-suave);
+        line-height: 1.7;
+        font-size: 1.1rem;
+    }
+
+    /* SECCIÓN DE MATERIALES PREMIUM */
+    .materiales-premium {
+        background: linear-gradient(180deg, #0A0A0A 0%, #1a1a1a 100%);
+        padding: 100px 20px;
+        border-top: 1px solid rgba(212, 175, 55, 0.3);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        margin-bottom: 100px;
+    }
+
+    .materiales-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .materiales-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 50px;
+        margin-top: 60px;
+    }
+
+    .material-card {
+        text-align: center;
+        padding: 40px 30px;
+        border: 1px solid rgba(192, 192, 192, 0.1);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        background: rgba(26, 26, 26, 0.5);
+    }
+
+    .material-card:hover {
+        border-color: var(--oro-metalico);
+        background: rgba(212, 175, 55, 0.05);
+    }
+
+    .material-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(212, 175, 55, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2rem;
+        color: var(--oro-metalico);
+    }
+
+    .material-nombre {
+        font-size: 1.5rem;
+        color: var(--blanco-puro);
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    /* SECCIÓN DE TESTIMONIOS */
+    .testimonios-elegance {
+        max-width: 900px;
+        margin: 0 auto 100px;
+        padding: 0 30px;
+    }
+
+    .testimonio-card {
+        background: linear-gradient(135deg, #1a1a1a, #252525);
+        padding: 50px 40px;
+        border-radius: 15px;
+        border-left: 5px solid var(--oro-metalico);
+        position: relative;
+        margin-top: 40px;
+    }
+
+    .testimonio-texto {
+        font-size: 1.4rem;
+        color: var(--plateado-suave);
+        line-height: 1.8;
+        font-style: italic;
+        margin-bottom: 30px;
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .testimonio-texto::before {
+        content: '"';
+        position: absolute;
+        left: 0;
+        top: -20px;
+        font-size: 4rem;
+        color: var(--oro-metalico);
+        opacity: 0.3;
+        font-family: serif;
+    }
+
+    .testimonio-autor {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .autor-nombre {
+        color: var(--blanco-puro);
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .autor-cargo {
+        color: var(--plateado-suave);
+        font-size: 1rem;
+    }
+
+    /* BOTONES */
+    .btn-elegance {
+        display: inline-block;
+        padding: 15px 45px;
+        background: linear-gradient(135deg, var(--oro-metalico), #b8942a);
+        color: var(--negro-profundo);
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .btn-elegance::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+        z-index: -1;
+    }
+
+    .btn-elegance:hover::before {
+        left: 100%;
+    }
+
+    .btn-elegance:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-volver-elegance {
+        display: inline-block;
+        padding: 12px 35px;
+        background: transparent;
+        color: var(--plateado-suave);
+        text-decoration: none;
+        border-radius: 30px;
+        border: 1px solid var(--plateado-suave);
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-volver-elegance:hover {
+        border-color: var(--oro-metalico);
+        color: var(--oro-metalico);
+        transform: translateY(-2px);
+    }
+
+    /* TÍTULOS DE SECCIÓN */
+    .seccion-titulo-elegance {
+        font-size: 2.8rem;
+        color: var(--blanco-puro);
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 20px;
+    }
+
+    .seccion-titulo-elegance::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background: linear-gradient(to right, transparent, var(--oro-metalico), transparent);
+    }
+
+    .seccion-subtitulo-elegance {
+        text-align: center;
+        color: var(--plateado-suave);
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto 60px;
+        line-height: 1.6;
+    }
+
+    /* ANIMACIONES REVEAL */
+    .reveal-elegance {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-elegance.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .diseno-hero h1 {
+            font-size: 3rem;
+        }
+
+        .diseno-hero p {
+            font-size: 1.1rem;
+            padding: 0 20px;
+        }
+
+        .seccion-titulo-elegance {
+            font-size: 2.2rem;
+        }
+
+        .filosofia-card,
+        .material-card {
+            padding: 30px 20px;
+        }
+
+        .testimonio-card {
+            padding: 30px 20px;
+        }
+
+        .testimonio-texto {
+            font-size: 1.2rem;
+            padding-left: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="diseno-hero">
+    <h1 class="reveal-elegance">DISEÑO EXCEPCIONAL</h1>
+    <p class="reveal-elegance">En <strong style="color: var(--oro-metalico);">ÉLÉGANCE</strong>, el diseño no es solo
+        estética; es una filosofía. Cada pieza es un testimonio de artesanía impecable, materiales exquisitos y una
+        búsqueda incansable de la perfección.</p>
+    <a href="#filosofia" class="btn-elegance reveal-elegance">Explorar Nuestra Filosofía</a>
+</section>
+
+<!-- FILOSOFÍA DE DISEÑO -->
+<section id="filosofia" class="filosofia-elegance">
+    <h2 class="seccion-titulo-elegance reveal-elegance">La Filosofía ÉLÉGANCE</h2>
+    <p class="seccion-subtitulo-elegance reveal-elegance">Cuatro principios fundamentales que guían cada creación en
+        nuestra colección</p>
+
+    <div class="filosofia-grid">
+        <!-- Principio 1 -->
+        <div class="filosofia-card reveal-elegance">
+            <span class="filosofia-icon">✧</span>
+            <h3 class="filosofia-titulo">Artesanía Atemporal</h3>
+            <p class="filosofia-desc">Cada pieza es elaborada por maestros artesanos que dominan técnicas ancestrales,
+                combinándolas con innovación contemporánea para crear obras que perduran generaciones.</p>
+        </div>
+
+        <!-- Principio 2 -->
+        <div class="filosofia-card reveal-elegance">
+            <span class="filosofia-icon">♛</span>
+            <h3 class="filosofia-titulo">Materiales Nobles</h3>
+            <p class="filosofia-desc">Seleccionamos únicamente materiales de origen ético y calidad excepcional: cueros
+                italianos, sedas orientales, gemas certificadas y metales preciosos de primera ley.</p>
+        </div>
+
+        <!-- Principio 3 -->
+        <div class="filosofia-card reveal-elegance">
+            <span class="filosofia-icon">⚖️</span>
+            <h3 class="filosofia-titulo">Equilibrio Perfecto</h3>
+            <p class="filosofia-desc">Encontramos el punto exacto entre tradición y vanguardia, funcionalidad y belleza,
+                ostentación y elegancia discreta. Cada diseño es un estudio de proporciones armónicas.</p>
+        </div>
+
+        <!-- Principio 4 -->
+        <div class="filosofia-card reveal-elegance">
+            <span class="filosofia-icon">✦</span>
+            <h3 class="filosofia-titulo">Exclusividad Responsable</h3>
+            <p class="filosofia-desc">Creemos en la exclusividad con propósito. Cada edición limitada no solo es escasa,
+                sino también sostenible, con procesos responsables y atención meticulosa al detalle.</p>
+        </div>
+    </div>
+</section>
+
+<!-- MATERIALES PREMIUM -->
+<section class="materiales-premium">
+    <div class="materiales-container">
+        <h2 class="seccion-titulo-elegance reveal-elegance">Materiales de Origen Ético</h2>
+        <p class="seccion-subtitulo-elegance reveal-elegance">La excelencia comienza con los materiales más nobles del
+            mundo</p>
+
+        <div class="materiales-grid">
+            <!-- Material 1 -->
+            <div class="material-card reveal-elegance">
+                <div class="material-icon">👑</div>
+                <h3 class="material-nombre">Cuero Italiano</h3>
+                <p style="color: var(--plateado-suave);">Proveniente de las mejores curtiembres de Toscana, cuero
+                    vegetal curtido con técnicas centenarias.</p>
+            </div>
+
+            <!-- Material 2 -->
+            <div class="material-card reveal-elegance">
+                <div class="material-icon">💎</div>
+                <h3 class="material-nombre">Platino 950</h3>
+                <p style="color: var(--plateado-suave);">El metal más exclusivo, 30 veces más raro que el oro, con un
+                    brillo eterno que nunca se desvanece.</p>
+            </div>
+
+            <!-- Material 3 -->
+            <div class="material-card reveal-elegance">
+                <div class="material-icon">🌿</div>
+                <h3 class="material-nombre">Seda Salvaje</h3>
+                <p style="color: var(--plateado-suave);">Seda peace silk, donde los capullos se recolectan después de
+                    que las mariposas emergen naturalmente.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="testimonios-elegance">
+    <h2 class="seccion-titulo-elegance reveal-elegance">Palabras de Connoisseurs</h2>
+    <p class="seccion-subtitulo-elegance reveal-elegance">Lo que dicen los expertos sobre el diseño ÉLÉGANCE</p>
+
+    <div class="testimonio-card reveal-elegance">
+        <p class="testimonio-texto">"En un mundo de producción masiva, ÉLÉGANCE se mantiene como un faro de artesanía
+            verdadera. Sus piezas no se usan; se experimentan. Cada costura, cada acabado, cada detalle cuenta una
+            historia de dedicación y excelencia."</p>
+
+        <div class="testimonio-autor">
+            <div>
+                <p class="autor-nombre">Isabella Rossi</p>
+                <p class="autor-cargo">Editora en Jefe, Vogue Italia</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LLAMADA A LA ACCIÓN -->
+<div style="text-align: center; padding: 80px 20px;">
+    <h3 class="reveal-elegance" style="font-size: 2rem; color: var(--blanco-puro); margin-bottom: 30px;">
+        Descubre la Elegancia Hecha Realidad
+    </h3>
+    <p class="reveal-elegance" style="color: var(--plateado-suave); max-width: 600px; margin: 0 auto 40px;">
+        Explora nuestra colección de piezas únicas donde cada artículo es más que un producto: es una declaración.
+    </p>
+    <a href="{% url 'productos' %}" class="btn-elegance reveal-elegance">Ver Colección Completa</a>
+    <br><br>
+    <a href="{% url 'menu' %}" class="btn-volver-elegance reveal-elegance" style="margin-top: 30px;">← Volver al
+        Inicio</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    // Animación al hacer scroll
+    document.addEventListener('DOMContentLoaded', function () {
+        // Configurar observador para animaciones
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observar todos los elementos con clase reveal-elegance
+        document.querySelectorAll('.reveal-elegance').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Efecto especial para botones
+        document.querySelectorAll('.btn-elegance').forEach(btn => {
+            btn.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-3px)';
+            });
+
+            btn.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
+{% endblock %}

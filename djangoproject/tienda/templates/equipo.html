@@ -1,0 +1,411 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap" rel="stylesheet">
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .section-title {
+        position: relative;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: black;
+        font-size: 42px;
+        font-weight: bold;
+        text-align: center;
+        z-index: 10;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .slider-container {
+        width: 100%;
+        height: 600px;
+        position: relative;
+        perspective: 1500px;
+    }
+
+    .cards-wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        margin: 20px 0;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        position: absolute;
+        width: 320px;
+        height: 420px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .card-content {
+        padding: 30px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-image {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        object-fit: cover;
+        border: 4px solid rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-role {
+        font-size: 14px;
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .social-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .social-btn:active {
+        transform: translateY(0);
+    }
+
+    .social-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .card-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .card-description {
+        font-size: 16px;
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .navigation {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 20px;
+        z-index: 1000;
+    }
+
+    .nav-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #667eea;
+        font-weight: bold;
+    }
+
+    .nav-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-btn:active {
+        transform: scale(0.95);
+    }
+
+    .indicators {
+        position: absolute;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 20px;
+        z-index: 1000;
+        padding: 20px 0;
+    }
+
+    .indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+        background: white;
+        width: 30px;
+        border-radius: 6px;
+    }
+</style>
+
+<h1 class="section-title">Nuestro Equipo</h1>
+<div class="slider-container">
+    <div class="cards-wrapper" id="cardsWrapper"></div>
+
+    <div class="indicators" id="indicators"></div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn">←</button>
+        <button class="nav-btn" id="nextBtn">→</button>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+
+<script>
+    const cardsData = [
+        {
+            image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop',
+            name: 'Carlos Rodríguez',
+            role: 'CEO & Fundador',
+            description: 'Visionario líder con 15 años de experiencia en tecnología y gestión empresarial',
+            linkedin: 'https://linkedin.com',
+            twitter: 'https://twitter.com'
+        },
+        {
+            image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop',
+            name: 'Ana Martínez',
+            role: 'CTO',
+            description: 'Experta en arquitectura de software y apasionada por las nuevas tecnologías',
+            linkedin: 'https://linkedin.com',
+            twitter: 'https://twitter.com'
+        },
+        {
+            image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop',
+            name: 'Miguel Torres',
+            role: 'Director de Diseño',
+            description: 'Creativo innovador enfocado en experiencias de usuario excepcionales',
+            linkedin: 'https://linkedin.com',
+            twitter: 'https://twitter.com'
+        },
+        {
+            image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop',
+            name: 'Laura García',
+            role: 'Head of Innovation',
+            description: 'Investigadora de tendencias y líder en transformación digital',
+            linkedin: 'https://linkedin.com',
+            twitter: 'https://twitter.com'
+        },
+        {
+            image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop',
+            name: 'David López',
+            role: 'Lead Developer',
+            description: 'Desarrollador full-stack con más de 10 años construyendo productos',
+            linkedin: 'https://linkedin.com',
+            twitter: 'https://twitter.com'
+        },
+        {
+            image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop',
+            name: 'Sofía Hernández',
+            role: 'Project Manager',
+            description: 'Especialista en metodologías ágiles y gestión de equipos multidisciplinarios',
+            linkedin: 'https://linkedin.com',
+            twitter: 'https://twitter.com'
+        },
+        {
+            image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop',
+            name: 'Roberto Sánchez',
+            role: 'DevOps Engineer',
+            description: 'Experto en infraestructura cloud y automatización de procesos',
+            linkedin: 'https://linkedin.com',
+            twitter: 'https://twitter.com'
+        }
+    ];
+
+    let currentIndex = Math.floor(cardsData.length / 2);
+    const cardsWrapper = document.getElementById('cardsWrapper');
+    const indicatorsContainer = document.getElementById('indicators');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // Crear las cards
+    cardsData.forEach((data, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+                <div class="card-content">
+                    <div>
+                        <img src="${data.image}" alt="${data.name}" class="card-image">
+                        <div class="card-role">${data.role}</div>
+                        <div class="card-title">${data.name}</div>
+                        <div class="card-description">${data.description}</div>
+                    </div>
+                    <div class="social-links">
+                        <a href="${data.linkedin}" target="_blank" rel="noopener noreferrer" class="social-btn">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a href="${data.twitter}" target="_blank" rel="noopener noreferrer" class="social-btn">
+                            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                            Twitter
+                        </a>
+                    </div>
+                </div>
+            `;
+        card.addEventListener('click', (e) => {
+            // Evitar que el click en los botones active el cambio de carta
+            if (e.target.closest('.social-btn')) return;
+
+            const diff = index - currentIndex;
+            if (diff !== 0) {
+                currentIndex = index;
+                updateCards();
+            }
+        });
+        cardsWrapper.appendChild(card);
+
+        // Crear indicador
+        const indicator = document.createElement('div');
+        indicator.className = 'indicator';
+        indicator.addEventListener('click', () => {
+            currentIndex = index;
+            updateCards();
+        });
+        indicatorsContainer.appendChild(indicator);
+    });
+
+    function updateCards() {
+        const cards = document.querySelectorAll('.card');
+        const indicators = document.querySelectorAll('.indicator');
+        const total = cards.length;
+
+        cards.forEach((card, index) => {
+            const diff = index - currentIndex;
+            const absDiff = Math.abs(diff);
+
+            // Resetear estilos
+            card.style.zIndex = 100 - absDiff;
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+
+            if (diff === 0) {
+                // Carta central (adelante)
+                card.style.transform = 'translateX(0) translateZ(0) scale(1)';
+                card.style.zIndex = '1000';
+            } else if (diff > 0) {
+                // Cartas a la derecha - más espacio entre cada una
+                const offset = 180 + (absDiff - 1) * 80;
+                const scale = 1 - (absDiff * 0.12);
+                const rotateY = -20 * Math.min(absDiff, 3);
+                const translateZ = -150 * absDiff;
+
+                card.style.transform = `translateX(${offset}px) translateZ(${translateZ}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                card.style.opacity = absDiff > 3 ? '0' : '1';
+                card.style.pointerEvents = absDiff > 3 ? 'none' : 'auto';
+            } else {
+                // Cartas a la izquierda - más espacio entre cada una
+                const offset = -180 - (absDiff - 1) * 80;
+                const scale = 1 - (absDiff * 0.12);
+                const rotateY = 20 * Math.min(absDiff, 3);
+                const translateZ = -150 * absDiff;
+
+                card.style.transform = `translateX(${offset}px) translateZ(${translateZ}px) scale(${scale}) rotateY(${rotateY}deg)`;
+                card.style.opacity = absDiff > 3 ? '0' : '1';
+                card.style.pointerEvents = absDiff > 3 ? 'none' : 'auto';
+            }
+        });
+
+        // Actualizar indicadores
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentIndex);
+        });
+    }
+
+    function nextSlide() {
+        currentIndex = (currentIndex + 1) % cardsData.length;
+        updateCards();
+    }
+
+    function prevSlide() {
+        currentIndex = (currentIndex - 1 + cardsData.length) % cardsData.length;
+        updateCards();
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // Soporte para teclado
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+    });
+
+    // Inicializar
+    updateCards();
+
+    // Auto-play opcional (comentado por defecto)
+    // setInterval(nextSlide, 3000);
+</script>
+{% endblock %}

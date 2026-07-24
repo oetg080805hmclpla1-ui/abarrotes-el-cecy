@@ -1,0 +1,400 @@
+/* ==========================================
+   1. RESET Y VARIABLES GLOBALES
+   ========================================== */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Domine", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+:root {
+    --fondo-principal: #080C16;    /* Azul muy oscuro / Negro azulado */
+    --fondo-secundario: #0F172A;   /* Azul noche */
+    --fondo-tarjetas: #162032;     /* Azul medio para cards */
+    
+    --verde-fresco: #008722;       /* Verde primario */
+    --verde-claro: #10B981;        /* Verde esmeralda acentos */
+    --borde-verde: rgba(16, 185, 129, 0.25);
+    
+    --blanco-puro: #FFFFFF;
+    --plateado-suave: #94A3B8;
+    --burdeos-profundo: #5B0E2D;
+}
+
+body {
+    background-color: var(--fondo-principal);
+    color: var(--blanco-puro);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    cursor: default;
+}
+
+/* ==========================================
+   2. CURSOR PERSONALIZADO
+   ========================================== */
+.cursor {
+    position: fixed;
+    width: 35px;
+    height: 35px;
+    border: 2px solid var(--verde-claro);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transition: all 0.15s ease;
+    transform: translate(-50%, -50%);
+}
+
+.cursor-dot {
+    position: fixed;
+    width: 7px;
+    height: 7px;
+    background: var(--verde-fresco);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10001;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+}
+
+.cursor.expand {
+    transform: translate(-50%, -50%) scale(1.4);
+    background: rgba(16, 185, 129, 0.15);
+}
+
+/* ==========================================
+   3. CONTENEDOR PRINCIPAL DE PRODUCTOS
+   ========================================== */
+.productos-container {
+    background: radial-gradient(ellipse at center, var(--fondo-secundario) 0%, var(--fondo-principal) 100%);
+    padding: 40px 20px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.titulo-productos {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding-bottom: 40px;
+}
+
+.titulo-productos h1, 
+.titulo-productos h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--blanco-puro);
+}
+
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ==========================================
+   4. TARJETA DE PRODUCTO (ESTÁNDAR)
+   ========================================== */
+.producto-card {
+    background: var(--fondo-tarjetas);
+    border: 1px solid var(--borde-verde);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s ease-in-out, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+.producto-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--verde-claro);
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+}
+
+.producto-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.producto-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.producto-info h2,
+.producto-info h3 {
+    font-size: 1.3rem;
+    margin: 10px 0 5px 0;
+    color: var(--blanco-puro);
+}
+
+.producto-info p {
+    font-size: 0.95rem;
+    color: var(--plateado-suave);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.producto-precio {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--verde-claro);
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
+/* BOTÓN DE AGREGAR */
+.btn-agregar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    background: var(--fondo-secundario);
+    color: var(--blanco-puro);
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid var(--borde-verde);
+    font-size: 1rem;
+    font-weight: 600;
+    overflow: hidden;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+    text-align: center;
+}
+
+.btn-agregar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(16, 185, 129, 0.2), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    z-index: 2;
+}
+
+.btn-agregar:hover::before {
+    left: 120%;
+}
+
+.btn-agregar:hover {
+    transform: scale(1.02);
+    border-color: var(--verde-claro);
+    background-color: var(--verde-fresco);
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.4);
+}
+
+/* ==========================================
+   5. TARJETA DE PRODUCTO AGOTADO
+   ========================================== */
+.sold-out-card {
+    position: relative;
+    opacity: 0.85;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: linear-gradient(135deg, #0d1322 0%, #080c16 100%);
+}
+
+.sold-out-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.sold-out-stamp {
+    background: linear-gradient(45deg, var(--burdeos-profundo), #80133e);
+    color: var(--blanco-puro);
+    padding: 10px 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transform: rotate(-12deg);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+    border-radius: 6px;
+    animation: stampPulse 3s infinite ease-in-out;
+}
+
+.sold-out-message {
+    background: rgba(8, 12, 22, 0.9);
+    color: var(--blanco-puro);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 15px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.sold-out-img {
+    filter: grayscale(80%) brightness(0.5);
+}
+
+.sold-out-filter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(8, 12, 22, 0.5);
+    z-index: 15;
+}
+
+.sold-out-title {
+    color: #64748b !important;
+    text-decoration: line-through;
+    text-decoration-color: #ef4444;
+    text-decoration-thickness: 2px;
+}
+
+.sold-out-desc {
+    color: #475569 !important;
+}
+
+.sold-out-price {
+    color: #64748b !important;
+    position: relative;
+}
+
+.sold-out-price::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    background: #ef4444;
+    transform: translateY(-50%);
+}
+
+.sold-out-button {
+    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+    color: #64748b !important;
+    border: 1px dashed #334155 !important;
+    cursor: not-allowed !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================
+   6. SECCIÓN SIN PRODUCTOS
+   ========================================== */
+.no-productos-especiales {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    padding: 50px 20px;
+    width: 100%;
+}
+
+.no-productos-especiales p {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--plateado-suave);
+}
+
+/* ==========================================
+   7. ANIMACIONES
+   ========================================== */
+@keyframes stampPulse {
+    0%, 100% {
+        transform: rotate(-12deg) scale(1);
+    }
+    50% {
+        transform: rotate(-12deg) scale(1.04);
+    }
+}
+
+/* ==========================================
+   8. MEDIA QUERIES (RESPONSIVIDAD)
+   ========================================== */
+
+/* Dispositivos Táctiles / Móviles (Ocultar cursor personalizado) */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+    body {
+        cursor: auto;
+    }
+    .cursor, .cursor-dot {
+        display: none !important;
+    }
+}
+
+/* Móviles pequeños y medianos (pantallas <= 600px) */
+@media (max-width: 600px) {
+    .productos-container {
+        padding: 20px 12px;
+    }
+
+    .titulo-productos {
+        padding-bottom: 25px;
+    }
+
+    .productos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .producto-card {
+        padding: 12px;
+    }
+
+    .producto-img {
+        height: 180px;
+    }
+
+    .sold-out-stamp {
+        font-size: 1rem;
+        padding: 8px 18px;
+    }
+
+    .sold-out-message {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+}
+
+/* Tabletas y Laptops pequeñas (601px a 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .productos-container {
+        padding: 30px 20px;
+    }
+
+    .productos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .producto-img {
+        height: 200px;
+    }
+}

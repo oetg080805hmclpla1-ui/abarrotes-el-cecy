@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/hombres-calzado.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<h1>{{ categoria }}</h1>
+
+<div class="productos-grid">
+    {% for p in productos %}
+    <div class="producto-card">
+        <img src="{% static p.imagen %}" alt="">
+        <h3>{{ p.nombre }}</h3>
+        <p>{{ p.descripcion }}</p>
+        <p>${{ p.precio }}</p>
+        <a href="{% url 'producto_detalle' p.nombre %}" class="btn">Ver más</a>
+    </div>
+    {% empty %}
+    <p>No hay productos en esta categoría.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

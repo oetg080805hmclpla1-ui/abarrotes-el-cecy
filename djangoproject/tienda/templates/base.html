@@ -1,0 +1,251 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %} Abarrotes el cecy {% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'style/base.css' %}">
+    <script src="https://kit.fontawesome.com/804eedb2cf.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+
+    <header>
+        <nav class="navbar reveal-left" id="navbar">
+            <a href="/" class="titulo-marca">
+                <h1>Abarrotes el cecy</h1>
+            </a>
+            <div class="search reveal-fade">
+                <form method="get" action="{% url 'plantilla' %}">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="produc-search" placeholder="Ingrese nombre del producto.">
+                </form>
+            </div>
+            <div class="enlaces reveal-fade">
+
+                <a href="{% url 'carrito' %}" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    {% if carrito_count > 0 %}
+                    <span class="badge bg-danger">{{ carrito_count }}</span>
+                    {% endif %}
+                </a>
+
+                <div class="dropdown-account reveal-fade">
+                    <p><i class="fa-solid fa-user"></i> Cuenta <span></span></p>
+                    <ul class="effect">
+                        {% if request.session.gmail %}
+                        <li><a href="/perfil">Mi perfil</a></li>
+                        <li><a href="/soporte">Ayuda</a></li>
+                        <li><a href="/cerrar">Cerrar sesión</a></li>
+                        {% else %}
+                        <li><a href="/index">Iniciar sesión</a></li>
+                        <li><a href="/registro">Crear cuenta</a></li>
+                        <li><a href="/soporte">Ayuda</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="categorias reveal-fade">
+            <div class="nav-categorias reveal-fade">
+                <ul class="sub-categorias">
+                    <li class="lista">
+                        <a id="btnAbrir" class="btn-abrir">
+                            <i class="fa-solid fa-bars"></i>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li class="lista">
+                        <a href="{% url 'menu' %}">
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li class="lista">
+                        <a href="/productos/">
+                            <span>Productos</span>
+                        </a>
+                    </li>
+                    <li class="lista">
+                        <a href="/contacto/">
+                            <span>Contacto</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="sidebar" class="sidebar">
+            <div class="logo-slide">
+                <div class="marca-slide shimmer-gold">ABARROTES</div>
+                <div id="btnCerrar" class="btn-cerrar">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="sub-slide">
+                <ul>
+                    <li>
+                        <a href="{% url 'menu' %}"><span>Inicio</span></a>
+                    </li>
+
+                    <li>
+                        <a href="/productos/"><span>Todos los productos</span></a>
+                    </li>
+
+                    <li class="submenu-item">
+                        <button class="submenu-btn">
+                            Despensa <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <ul class="submenu">
+                            <li><a href="/productos/?categoria=Abarrotes y Despensa">Abarrotes y Despensa</a></li>
+                            <li><a href="/productos/?categoria=Enlatados">Enlatados</a></li>
+                            <li><a href="/productos/?categoria=Semillas y Cereales">Semillas y Cereales</a></li>
+                            <li><a href="/productos/?categoria=Aceites y Sal">Aceites y Sal</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="submenu-item">
+                        <button class="submenu-btn">
+                            Bebidas <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <ul class="submenu">
+                            <li><a href="/productos/?categoria=Bebidas">Todas las Bebidas</a></li>
+                            <li><a href="/productos/?categoria=Refrescos">Refrescos</a></li>
+                            <li><a href="/productos/?categoria=Jugos y Aguas">Jugos y Aguas</a></li>
+                            <li><a href="/productos/?categoria=Cervezas">Cervezas</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="submenu-item">
+                        <button class="submenu-btn">
+                            Higiene y Limpieza <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                        <ul class="submenu">
+                            <li><a href="/productos/?categoria=Para el Hogar">Para el Hogar</a></li>
+                            <li><a href="/productos/?categoria=Cuidado Personal">Cuidado Personal</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="/contacto/">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="overlay" class="overlay"></div>
+
+    </header>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer id="contacto">
+        <div class="footer-content reveal-fade">
+            <div class="footer-col reveal-fade">
+                <h3>Abarrotes El Cecy</h3>
+                <p>Tu tienda de confianza con los productos más frescos y al mejor precio para tu hogar.</p>
+                <div class="social-links reveal-fade">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="footer-col reveal-fade">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="{% url 'menu' %}">Inicio</a></li>
+                    <li><a href="/productos/">Catálogo</a></li>
+                    <li>
+                        <a style="cursor: not-allowed; color: #C0C0C0;" title="En desarrollo"> Ofertas</a>
+                    </li>
+                    <li><a href="/soporte">Ayuda</a></li>
+                    <li><a href="/contacto/">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-col reveal-fade">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="/productos/?categoria=Abarrotes y Despensa">Abarrotes y Despensa</a></li>
+                    <li><a href="/productos/?categoria=Bebidas">Bebidas y Botanas</a></li>
+                    <li><a href="/productos/?categoria=Lácteos y Salchichonería">Lácteos y Salchichonería</a></li>
+                    <li><a href="/productos/?categoria=Limpieza del Hogar">Limpieza del Hogar</a></li>
+                </ul>
+            </div>
+            <div class="footer-col reveal-fade">
+                <h3>Contacto</h3>
+                <ul>
+                    <li><a href="https://maps.app.goo.gl/fLmGRPaMdNfx76z97" target="_blank"><i
+                                class="fas fa-map-marker-alt"></i> Sta Maria Guadalupe las Torres</a></li>
+                    <li><a href=""><i class="fas fa-phone"></i> +52 55 1234 5678</a></li>
+                    <li><a href=""><i class="fas fa-envelope"></i> contacto@abarrotescecy.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright reveal-fade">
+            <p>© 2025 Abarrotes El Cecy. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+    {% block extra_js %}
+    <script src="{% static 'java/scroll.js' %}"></script>
+    <script src="{% static 'java/cursor-custom.js' %}"></script>
+    <script src="{% static 'java/base.js' %}"></script>
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        function getCSRFToken() {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, 10) === 'csrftoken=') {
+                        cookieValue = decodeURIComponent(cookie.substring(10));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function mostrarNotificacion(tipo, mensaje) {
+            const notif = document.createElement('div');
+            notif.className = `alert alert-${tipo === 'exito' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+            notif.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notif.innerHTML = `${mensaje}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 4000);
+        }
+    </script>
+    {% endblock %}
+
+</body>
+
+</html>

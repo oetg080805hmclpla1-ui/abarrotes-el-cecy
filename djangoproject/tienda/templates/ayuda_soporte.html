@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/ayuda.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="ayuda-container">
+    <h1 class="ayuda-titulo">Ayuda</h1>
+
+    <div class="faq-simple">
+        <h2>Preguntas frecuentes</h2>
+
+        <div class="faq-item">
+            <h3>¿Cómo compro?</h3>
+            <p>Agrega productos al carrito, ve al carrito y completa el checkout.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Métodos de pago?</h3>
+            <p>Aceptamos tarjetas de crédito/débito.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Cómo veo mis pedidos?</h3>
+            <p>Ve a tu perfil > Mis pedidos.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>¿Cómo contacto soporte?</h3>
+            <p>Email: atencion@elegance.com</p>
+        </div>
+    </div>
+
+    <div class="contacto-simple">
+        <div class="contacto-simple-div">
+
+            <h2>Contacto</h2>
+        </div>
+        <p><strong>General:</strong> atencion@elegance.com <br><br> Sta Maria Guadalupe las Torres <br><br> +34 912 345 678 </p>
+
+        <p>
+            <strong>Horario:</strong> Lunes a Viernes 9:00 AM - 8:00 PM <br><br> Sábados 10:00 AM - 6:00 PM <br><br> Domingos
+            11:00 AM - 4:00 PM
+        </p>
+    </div>
+</div>
+
+{% endblock %}

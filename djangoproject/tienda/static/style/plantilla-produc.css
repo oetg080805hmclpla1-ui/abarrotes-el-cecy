@@ -1,0 +1,353 @@
+/* ==========================================
+   1. RESET Y VARIABLES GLOBALES
+   ========================================== */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Domine", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+:root {
+    --negro-profundo: #0A0A0A;
+    --blanco-puro: #FFFFFF;
+    --oro-metalico: #D4AF37;
+    --plateado-suave: #C0C0C0;
+    --azul-navy: #1A1F71;
+    --burdeos-profundos: #5B0E2D;
+    --verde-esmeralda: #046307;
+    --gris-carbon: #1b1a1a;
+}
+
+body {
+    background-color: var(--negro-profundo);
+    color: var(--blanco-puro);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    cursor: none;
+}
+
+/* ==========================================
+   2. CURSOR PERSONALIZADO
+   ========================================== */
+.cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--oro-metalico);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transition: all 0.15s ease;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+}
+
+.cursor-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--oro-metalico);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10001;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+}
+
+.cursor.expand {
+    transform: translate(-50%, -50%) scale(1.5);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+/* ==========================================
+   3. CONTENEDOR GENERAL DE PRODUCTOS
+   ========================================== */
+.productos-container {
+    background: radial-gradient(ellipse at center, var(--gris-carbon) 0%, var(--negro-profundo) 100%);
+    padding: 40px 20px;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.titulo-productos {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding-bottom: 40px;
+}
+
+.titulo-productos h1, 
+.titulo-productos h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--blanco-puro);
+}
+
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ==========================================
+   4. TARJETA DE PRODUCTO
+   ========================================== */
+.producto-card {
+    background: var(--gris-carbon);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.4s ease-in-out, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    height: 100%; /* Adaptable dinámicamente */
+}
+
+.producto-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+}
+
+.producto-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.producto-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.producto-info > h2,
+.producto-info > h3 {
+    font-size: 1.3rem;
+    margin: 10px 0 5px 0;
+    color: var(--blanco-puro);
+}
+
+.producto-info > p {
+    font-size: 0.95rem;
+    color: var(--plateado-suave);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.producto-precio {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--oro-metalico);
+    margin-top: auto;
+    margin-bottom: 10px;
+}
+
+/* BOTÓN AGREGAR */
+.btn-agregar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    background: var(--negro-profundo);
+    color: var(--blanco-puro);
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-size: 1rem;
+    font-weight: 600;
+    overflow: hidden;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    text-align: center;
+}
+
+.btn-agregar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, var(--plateado-suave), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    z-index: 2;
+}
+
+.btn-agregar:hover::before {
+    left: 120%;
+}
+
+.btn-agregar:hover {
+    transform: scale(1.03);
+    border-color: var(--oro-metalico);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================
+   5. TARJETA PRODUCTO AGOTADO
+   ========================================== */
+.sold-out-card {
+    position: relative;
+    opacity: 0.85;
+    border: 1px solid #333;
+    background: linear-gradient(135deg, #181818 0%, #101010 100%);
+}
+
+.sold-out-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.sold-out-stamp {
+    background: linear-gradient(45deg, var(--burdeos-profundos), #80133e);
+    color: var(--blanco-puro);
+    padding: 12px 28px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transform: rotate(-12deg);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    animation: stampPulse 3s infinite ease-in-out;
+}
+
+.sold-out-message {
+    background: rgba(0, 0, 0, 0.85);
+    color: var(--blanco-puro);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-top: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sold-out-img {
+    filter: grayscale(80%) brightness(0.5);
+}
+
+.sold-out-filter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 15;
+}
+
+.sold-out-title {
+    color: #777 !important;
+    text-decoration: line-through;
+    text-decoration-color: #ff6b6b;
+    text-decoration-thickness: 2px;
+}
+
+.sold-out-desc {
+    color: #555 !important;
+}
+
+.sold-out-price {
+    color: #666 !important;
+    position: relative;
+}
+
+.sold-out-price::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    background: #ff6b6b;
+    transform: translateY(-50%);
+}
+
+.sold-out-button {
+    background: linear-gradient(135deg, #2a2a2a, #1f1f1f) !important;
+    color: #666 !important;
+    border: 1px dashed #444 !important;
+    cursor: not-allowed !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================
+   6. ANIMACIONES & ADAPTACIÓN RESPONSIVA
+   ========================================== */
+@keyframes stampPulse {
+    0%, 100% {
+        transform: rotate(-12deg) scale(1);
+    }
+    50% {
+        transform: rotate(-12deg) scale(1.04);
+    }
+}
+
+/* Desactivar cursor táctil en pantallas móviles */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+    body {
+        cursor: auto;
+    }
+    .cursor, .cursor-dot {
+        display: none !important;
+    }
+}
+
+/* Pantallas Smartphones (<= 600px) */
+@media (max-width: 600px) {
+    .productos-container {
+        padding: 20px 12px;
+    }
+
+    .titulo-productos {
+        padding-bottom: 20px;
+    }
+
+    .productos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.2rem;
+    }
+
+    .producto-card {
+        padding: 12px;
+    }
+
+    .producto-img {
+        height: 170px;
+    }
+
+    .sold-out-stamp {
+        font-size: 0.95rem;
+        padding: 8px 16px;
+    }
+}

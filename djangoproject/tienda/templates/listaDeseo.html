@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/listaDeseo.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+<section class="wishlist-container">
+    <h1 class="titulo-wishlist">
+        Tu lista de deseos
+        {% if total_deseos > 0 %}
+        <span id="wishlistCount" class="wishlist-count">({{ total_deseos }})</span>
+        {% else %}
+        <span id="wishlistCount" class="wishlist-count">(0)</span>
+        {% endif %}
+    </h1>
+
+    {% if total_deseos == 0 %}
+    <div class="wishlist-empty">
+        <div class="empty-icon">
+            <i class="fas fa-heart"></i>
+        </div>
+        <h2>Tu lista de deseos está vacía</h2>
+        <p>Agrega productos que te gusten para verlos aquí.</p>
+        <a href="{% url 'menu' %}" class="btn-explorar">
+            <i class="fas fa-store"></i> Explorar productos
+        </a>
+    </div>
+    {% else %}
+    <div class="wishlist-grid" id="wishlistContainer">
+        {% for producto in lista %}
+        <div class="wishlist-item" data-product-id="{{ producto.id_str|default:producto.id }}">
+            <div class="wishlist-item-header">
+                <span class="product-category">{{ producto.categoria|default:"General" }}</span>
+                <button class="btn-remove-wishlist" data-product-id="{{ producto.id_str|default:producto.id }}"
+                    title="Eliminar de lista de deseos">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="wishlist-item-image">
+                {% if producto.imagen %}
+                {% if producto.imagen|slice:":4" == "http" or producto.imagen|first == "/" %}
+                <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}" loading="lazy">
+                {% else %}
+                <img src="{% static producto.imagen %}" alt="{{ producto.nombre }}" loading="lazy">
+                {% endif %}
+                {% else %}
+                <div class="no-image">
+                    <i class="fas fa-image"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="wishlist-item-info">
+                <h3 class="product-name">{{ producto.nombre }}</h3>
+                <p class="product-description">{{ producto.descripcion|truncatechars:100 }}</p>
+
+                <div class="product-price">
+                    <span class="price">${{ producto.precio|floatformat:2 }}</span>
+                    {% if not producto.disponible %}
+                    <span class="out-of-stock">Agotado</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="wishlist-item-actions">
+                <button class="btn-move-to-cart" data-product-id="{{ producto.id_str|default:producto.id }}" {% if not producto.disponible %}disabled title="Producto agotado" {% endif %}>
+                    <i class="fas fa-cart-plus"></i> Mover al carrito
+                </button>
+                <a href="{% url 'producto_detalle' producto.nombre %}" class="btn-view-details">
+                    <i class="fas fa-eye"></i> Ver detalles
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="wishlist-actions">
+        <button class="btn-clear-wishlist" id="clearWishlistBtn">
+            <i class="fas fa-trash"></i> Vaciar lista de deseos
+        </button>
+        <a href="{% url 'menu' %}" class="btn-continue-shopping">
+            <i class="fas fa-arrow-left"></i> Seguir comprando
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+<div id="confirmModal" class="modal">
+    <div class="modal-content">
+        <h3>Confirmar acción</h3>
+        <p id="modalMessage"></p>
+        <div class="modal-buttons">
+            <button id="confirmBtn" class="btn-confirm">Confirmar</button>
+            <button id="cancelBtn" class="btn-cancel">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="{% static 'java/listaDeseo.js' %}"></script>
+{% endblock %}

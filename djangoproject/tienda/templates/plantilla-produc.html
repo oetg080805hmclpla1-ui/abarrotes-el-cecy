@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/plantilla-produc.css' %}" />
+{% endblock %}
+
+
+{% block content %}
+
+<section class="productos-container">
+    {% if query %}
+    <h1 class="titulo-productos">Resultados para "{{ query }}"</h1>
+    {% else %}
+    <h1 class="titulo-productos">Todos los productos</h1>
+    {% endif %}
+
+    {% if productos %}
+    <div class="productos-grid">
+        {% for producto in productos %}
+        <div class="producto-card">
+            <img src="{% static producto.imagen %}" alt="{{ producto.nombre }}" class="producto-img">
+
+            <div class="producto-info">
+                <h2>{{ producto.nombre }}</h2>
+                <p>{{ producto.descripcion }}</p>
+                <p class="producto-precio">${{ producto.precio }}</p>
+
+                <a href="{% url 'producto_detalle' producto.nombre %}" class="btn-agregar" style="text-decoration: none;">
+                    Ver producto
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align:center; margin-top:40px; font-size:1.2rem;">
+        No se encontraron productos relacionados.
+    </p>
+    {% endif %}
+</section>
+
+{% endblock %}

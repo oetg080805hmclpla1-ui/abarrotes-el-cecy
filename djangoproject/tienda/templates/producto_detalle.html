@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/producto_detalle.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="detalle-container reveal-left">
+    <div class="detalle-producto reveal-left">
+
+        <div class="detalle-imagen reveal-left">
+            <img src="{% static producto.imagen %}" alt="{{ producto.nombre }}">
+        </div>
+
+        <div class="detalle-info reveal-left">
+            <h1 class="titulo">{{ producto.nombre }}</h1>
+            <p class="descripcion-corta">{{ producto.descripcion }}</p>
+            <h2 class="precio">$ {{ producto.precio }}</h2>
+
+            <div class="acciones-producto reveal-left" style="display: flex; align-items: center; gap: 15px; margin: 20px 0;">
+                
+                <form action="{% url 'agregar_carrito' producto.id_str %}" method="POST" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" 
+                            class="btn-agregar btn-agregar-carrito" 
+                            data-producto-id="{{ producto.id_str }}" 
+                            style="cursor: pointer;">
+                        Agregar al carrito
+                    </button>
+                </form>
+
+            </div>
+
+            <hr>
+            <h3>Detalles del producto</h3>
+            <p class="descripcion-larga">{{ producto.descripcion_larga|linebreaks }}</p>
+        </div>
+
+    </div>
+</section>
+
+<div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    var productoData = {
+        id: "{{ producto.id_str }}",
+        nombre: "{{ producto.nombre|escapejs }}"
+    };
+</script>
+
+<script src="{% static 'java/producto_detalle.js' %}"></script>
+<script src="{% static 'java/agregar_carrito.js' %}"></script>
+
+{% endblock %}

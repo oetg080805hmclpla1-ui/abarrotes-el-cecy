@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Orden #{{ orden_id }} {% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/orden_detalle.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <div class="mb-4">
+            <i class="fas fa-check-circle fa-5x text-success"></i>
+        </div>
+        <h1 class="display-4 text-success">¡Compra Exitosa!</h1>
+        <p class="lead">Tu orden ha sido procesada correctamente.</p>
+        <p class="text-muted">Número de orden: <strong>#{{ orden_id }}</strong></p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">
+                        <i class="fas fa-receipt"></i> Detalles de la Orden
+                    </h4>
+
+                    <div class="mb-4">
+                        <h5>Productos:</h5>
+                        {% for producto in orden.productos %}
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>{{ producto.nombre }} (x{{ producto.cantidad }})</span>
+                            <span>${{ producto.subtotal|floatformat:2 }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal:</span>
+                        <span>${{ orden.subtotal|floatformat:2 }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Envío:</span>
+                        <span>${{ orden.envio|floatformat:2 }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Impuestos:</span>
+                        <span>${{ orden.impuestos|floatformat:2 }}</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <strong class="fs-5">Total Pagado:</strong>
+                        <strong class="fs-4 text-primary">${{ orden.total|floatformat:2 }}</strong>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Información de Envío:</h5>
+                            <p class="mb-1">{{ orden.direccion_envio.nombre }}</p>
+                            <p class="mb-1">{{ orden.direccion_envio.direccion }}</p>
+                            <p class="mb-1">{{ orden.direccion_envio.ciudad }}</p>
+                            <p class="mb-1">{{ orden.direccion_envio.codigo_postal }}</p>
+                            <p class="mb-1">Tel: {{ orden.direccion_envio.telefono }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Estado:</h5>
+                            <span class="badge bg-warning fs-6">{{ orden.estado|title }}</span>
+                            <p class="mt-2 text-muted small">
+                                Fecha: {{ orden.fecha_creacion|date:"d/m/Y H:i" }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <a href="{% url 'menu' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+                <a href="{% url 'productos' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-shopping-bag"></i> Seguir Comprando
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Carrito{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'style/carrito.css' %}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container reveal-left">
+    <h2 class="mb-4"><i class="fas fa-shopping-cart"></i> Tu Carrito de Compras</h2>
+
+    {% if productos %}
+    <div class="table-responsive reveal-left">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 40%;">Producto</th>
+                    <th class="text-center">Precio</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-center">Subtotal</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-carrito">
+                {% for producto in productos %} <!-- ← CAMBIADO -->
+                <tr id="fila-{{ producto.producto_id }}" data-producto-id="{{ producto.producto_id }}"
+                    data-producto-nombre="{{ producto.nombre }}"> <!-- ← AÑADIDO -->
+                    <td>
+                        <div class="d-flex align-self-center reveal-left">
+                            {% if producto.imagen %} <!-- ← CAMBIADO -->
+                            <img src="{% static producto.imagen %}" class="rounded me-3" alt="{{ producto.nombre }}"
+                                width="80" height="80" style="object-fit: cover;">
+                            {% else %}
+                            <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center reveal-left"
+                                style="width: 80px; height: 80px;">
+                                <i class="fas fa-box text-muted fa-2x"></i>
+                            </div>
+                            {% endif %}
+                            <div class="reveal-left">
+                                <h6 class="mb-1">{{ producto.nombre }}</h6>
+                                <p class="text-muted mb-0 small">{{ producto.descripcion|truncatechars:80 }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center reveal-left">
+                        <span class="precio-unitario" data-precio="{{ producto.precio }}">
+                            ${{ producto.precio|floatformat:2 }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center reveal-left">
+                            <div class="input-group reveal-left">
+                                <button class="btn btn-outline-secondary btn-sm btn-disminuir" type="button">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="form-control form-control-sm text-center cantidad-input"
+                                    value="{{ producto.cantidad }}" min="1" max="99"
+                                    data-producto-id="{{ producto.producto_id }}">
+                                <button class="btn btn-outline-secondary btn-sm btn-aumentar" type="button">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span class="fw-bold subtotal" id="subtotal-{{ producto.producto_id }}"> <!-- ← AÑADIDO ID -->
+                            ${{ producto.subtotal|floatformat:2 }} <!-- ← CAMBIADO -->
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-outline-danger btn-sm btn-eliminar"
+                            data-producto-id="{{ producto.producto_id }}" data-producto-nombre="{{ producto.nombre }}"
+                            title="Eliminar del carrito">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Resumen del pedido -->
+    <div class="row mt-5 reveal-left">
+        <div class="col-md-6 offset-md-6 reveal-left">
+            <div class="card border-0 shadow-sm reveal-left">
+                <div class="card-body reveal-left">
+                    <h5 class="card-title mb-4">
+                        <i class="fas fa-receipt"></i> Resumen del Pedido
+                    </h5>
+
+                    <div class="d-flex justify-content-between mb-2 reveal-left">
+                        <span class="text-muted">Subtotal:</span>
+                        <span id="subtotal-total">${{ total|floatformat:2 }}</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2 reveal-left">
+                        <span class="text-muted">EnvÍo:</span>
+                        <span id="envio-costo">$0.00</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2 reveal-left">
+                        <span class="text-muted">Impuestos (15%):</span>
+                        <span id="impuestos">${{ impuestos|floatformat:2 }}</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-4 reveal-left">
+                        <strong class="fs-5">Total:</strong>
+                        <strong class="fs-4 text-primary" id="total-final">
+                            ${{ total_con_impuestos|floatformat:2 }}
+                        </strong>
+                    </div>
+
+                    <div class="d-grid gap-2 reveal-left">
+                        <button class="btn btn-success btn-lg py-3" id="proceder-compra">
+                            <i class="fas fa-lock"></i> Proceder con la Compra
+                        </button>
+                        <a href="{% url 'menu' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left"></i> Seguir Comprando
+                        </a>
+                        <button class="btn btn-outline-danger" id="vaciar-carrito">
+                            <i class="fas fa-trash-alt"></i> Vaciar Carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="text-center py-5 reveal-left">
+        <div class="mb-4 reveal-left">
+            <i class="fas fa-shopping-cart fa-5x text-muted"></i>
+        </div>
+        <h3 class="text-muted mb-3">Tu carrito está vacío</h3>
+        <p class="text-muted mb-4">¡Agrega algunos productos para comenzar a comprar!</p>
+        <div class="d-flex justify-content-center gap-3 reveal-left">
+            <a href="{% url 'menu' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-store"></i> Volver al menu
+            </a>
+            <a href="{% url 'productos' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-box"></i> Todos los Productos
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+
+
+<script src="{% static 'java/carrito.js' %}"></script>
+
+
+{% endblock %}

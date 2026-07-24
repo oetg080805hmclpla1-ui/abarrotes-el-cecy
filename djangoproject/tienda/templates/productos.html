@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'style/productos.css' %}">
+
+<style>
+    /* Estilos adicionales para las secciones */
+    .seccion-titulo {
+        text-align: center;
+        margin: 10px 0 30px;
+        font-size: 2rem;
+        color: var(--verde-esmeralda);
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .seccion-titulo::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 3px;
+        background: linear-gradient(to right, transparent, var(--plateado-suave), transparent);
+    }
+
+    .seccion-subtitulo {
+        text-align: center;
+        color: var(--plateado-suave);
+        font-size: 1.1rem;
+        margin-bottom: 40px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .badge-limitado {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(45deg, #ffd700, #ffed4e);
+        color: #000;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 10;
+        box-shadow: 0 3px 10px rgba(255, 215, 0, 0.3);
+    }
+
+    .seccion-divider {
+        height: 2px;
+        background: linear-gradient(to right, transparent, #ddd, transparent);
+        margin: 60px 0;
+        width: 80%;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .producto-card.limitado {
+        border: 2px solid #ffd700;
+        box-shadow: 0 5px 20px rgba(255, 215, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="productos-container">
+    <h1 class="titulo-productos">Todos nuestros productos</h1>
+
+    <div class="seccion-productos">
+        <h2 class="seccion-titulo" style="color: var(--plateado-suave);">Productos Disponibles</h2>
+        <p class="seccion-subtitulo">Nuestra colección regular de productos premium</p>
+
+        <div class="productos-grid reveal-fade">
+            {% for producto in productos %}
+            {% if not producto.es_limitado or producto.es_limitado == False %}
+            <div class="producto-card reveal-fade">
+                <div class="producto-img-container">
+                    <img src="{% static producto.imagen %}" alt="{{ producto.nombre }}" class="producto-img">
+                </div>
+
+                <div class="producto-info">
+                    <h2 class="producto-nombre">{{ producto.nombre }}</h2>
+
+                    <p class="producto-descripcion">
+                        {{ producto.descripcion|default:"Sin descripción disponible"|truncatechars:100 }}
+                    </p>
+
+                    <p class="producto-precio">
+                        ${{ producto.precio }}
+                    </p>
+
+                    <a href="{% url 'producto_detalle' producto.nombre %}" class="btn-agregar">
+                        Ver producto
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% if not productos|length > 0 %}
+            <p class="no-productos">Aún no hay productos disponibles.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- DIVISOR ENTRE SECCIONES -->
+    <div class="seccion-divider"></div>
+
+    <!-- SECCIÓN 2: PRODUCTOS LIMITADOS/EXCLUSIVOS -->
+    <div class="seccion-productos">
+        <h2 class="seccion-titulo"> Ediciones Limitadas </h2>
+        <p class="seccion-subtitulo">Productos exclusivos de tiempo limitado. ¡No te quedes sin el tuyo!</p>
+
+        <div class="productos-grid reveal-fade">
+            {% for producto in productos %}
+            {% if producto.es_limitado %}
+            <div class="producto-card limitado reveal-fade">
+                <!-- Badge de edición limitada -->
+                <div class="badge-limitado">
+                    EDICIÓN LIMITADA
+                </div>
+
+                <div class="sold-out-overlay">
+                    <div class="sold-out-stamp">
+                        <span class="sold-out-text">AGOTADO</span>
+                    </div>
+                    <p class="sold-out-message">Próxima edición próximamente</p>
+                </div>
+
+                <div class="producto-img-container">
+                    <img src="{% static producto.imagen %}" alt="{{ producto.nombre }}"
+                        class="producto-img sold-out-img">
+                    <!-- Filtro de agotado sobre la imagen -->
+                    <div class="sold-out-filter"></div>
+                </div>
+
+
+                <div class="producto-info">
+                    <h2 class="producto-nombre sold-out-title">{{ producto.nombre }}</h2>
+
+                    <p class="producto-descripcion sold-out-desc">
+                        {{ producto.descripcion|default:"Producto exclusivo de edición limitada"|truncatechars:100 }}
+                    </p>
+
+                    <div class="producto-precio-container">
+                        <p class="producto-precio especial sold-out-price">
+                            ${{ producto.precio }}
+                            {% if producto.stock and producto.stock <= 20 %} <span class="stock-bajo">(Agotado)</span>
+                                {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="btn-agregar especial disabled-btn sold-out-button">
+                        <span class="btn-text">EDICIÓN AGOTADA</span>
+                    </div>
+                    <!-- href="{% url 'producto_detalle' producto.nombre %}" 
+                        <a class="btn-agregar especial disabled-btn" style="cursor: not-allowed;">
+                            ¡Conseguir ahora!
+                        </a>
+                    -->
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% with productos_limitados=productos|dictsort:"es_limitado"|last %}
+            {% if productos_limitados.es_limitado %}
+            <div class="no-productos-especiales">
+                <p>Próximamente nuevas ediciones limitadas...</p>
+            </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

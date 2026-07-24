@@ -1,0 +1,912 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    /* ESTILOS PARA AGENDAR CITA */
+    .cita-hero {
+        background: linear-gradient(rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.95)),
+            url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1920&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+        padding: 100px 20px;
+        margin-bottom: 60px;
+        border-bottom: 1px solid var(--oro-metalico);
+    }
+
+    .cita-hero h1 {
+        font-size: 3.5rem;
+        color: var(--blanco-puro);
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .cita-hero p {
+        font-size: 1.2rem;
+        color: var(--plateado-suave);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .cita-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px 80px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+    }
+
+    @media (max-width: 992px) {
+        .cita-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* FORMULARIO DE CITA */
+    .cita-formulario {
+        background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+        border-radius: 15px;
+        padding: 40px;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-title {
+        color: var(--blanco-puro);
+        font-size: 2rem;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .form-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 2px;
+        background: var(--oro-metalico);
+    }
+
+    /* GRUPOS DE FORMULARIO */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        display: block;
+        color: var(--plateado-suave);
+        margin-bottom: 8px;
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        padding: 14px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(192, 192, 192, 0.2);
+        border-radius: 8px;
+        color: var(--blanco-puro);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: var(--oro-metalico);
+        box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .form-input::placeholder {
+        color: rgba(192, 192, 192, 0.5);
+    }
+
+    /* SELECT ESPECIAL PARA TIENDAS */
+    .tiendas-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 10px;
+    }
+
+    .tienda-option {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(192, 192, 192, 0.2);
+        border-radius: 10px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .tienda-option:hover {
+        border-color: var(--oro-metalico);
+        background: rgba(212, 175, 55, 0.05);
+        transform: translateY(-3px);
+    }
+
+    .tienda-option.selected {
+        border-color: var(--oro-metalico);
+        background: rgba(212, 175, 55, 0.1);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+    }
+
+    .tienda-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .tienda-nombre {
+        color: var(--blanco-puro);
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .tienda-direccion {
+        color: var(--plateado-suave);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+
+    /* SELECTOR DE FECHA Y HORA */
+    .datetime-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    @media (max-width: 576px) {
+        .datetime-selector {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .horarios-disponibles {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .hora-option {
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(192, 192, 192, 0.2);
+        border-radius: 6px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--plateado-suave);
+    }
+
+    .hora-option:hover {
+        border-color: var(--oro-metalico);
+        color: var(--oro-metalico);
+    }
+
+    .hora-option.selected {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: var(--oro-metalico);
+        color: var(--oro-metalico);
+        font-weight: bold;
+    }
+
+    .hora-option.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* MAPA */
+    .cita-mapa {
+        background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+        border-radius: 15px;
+        padding: 30px;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        height: fit-content;
+    }
+
+    .mapa-container {
+        height: 400px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 20px;
+        position: relative;
+    }
+
+    .mapa-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--plateado-suave);
+    }
+
+    .mapa-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    /* DETALLES DE LA CITA */
+    .cita-resumen {
+        background: rgba(212, 175, 55, 0.1);
+        border-radius: 10px;
+        padding: 25px;
+        margin-top: 30px;
+        border-left: 4px solid var(--oro-metalico);
+    }
+
+    .resumen-title {
+        color: var(--oro-metalico);
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .resumen-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: var(--plateado-suave);
+    }
+
+    .resumen-label {
+        font-weight: 500;
+    }
+
+    .resumen-value {
+        color: var(--blanco-puro);
+    }
+
+    /* BOTONES */
+    .btn-cita {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, var(--oro-metalico), #b8942a);
+        color: var(--negro-profundo);
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .btn-cita:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-cita:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .btn-volver-cita {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 12px 30px;
+        background: transparent;
+        color: var(--plateado-suave);
+        border: 1px solid var(--plateado-suave);
+        border-radius: 30px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-volver-cita:hover {
+        border-color: var(--oro-metalico);
+        color: var(--oro-metalico);
+        transform: translateY(-2px);
+    }
+
+    /* ESTADOS */
+    .loading {
+        position: relative;
+        opacity: 0.7;
+    }
+
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 25px;
+        height: 25px;
+        border: 3px solid rgba(212, 175, 55, 0.3);
+        border-top-color: var(--oro-metalico);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+
+    .success-message {
+        background: rgba(4, 99, 7, 0.2);
+        border: 1px solid var(--verde-esmeralda);
+        color: var(--blanco-puro);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 20px;
+        display: none;
+    }
+
+    .error-message {
+        background: rgba(91, 14, 45, 0.2);
+        border: 1px solid var(--burdeos-profundos);
+        color: var(--blanco-puro);
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        margin-top: 20px;
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="cita-hero">
+    <h1>Agendar Cita Exclusiva</h1>
+    <p>Experimente el lujo de una atención personalizada en una de nuestras tiendas selectas. Seleccione su ubicación,
+        fecha y horario preferido.</p>
+</section>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="cita-container">
+    <!-- FORMULARIO -->
+    <div class="cita-formulario">
+        <h2 class="form-title">Reserve Su Experiencia</h2>
+
+        <form id="citaForm">
+            <!-- DATOS PERSONALES -->
+            <div class="form-group">
+                <label class="form-label" for="nombre">Nombre Completo *</label>
+                <input type="text" id="nombre" class="form-input" placeholder="Ingrese su nombre completo" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Correo Electrónico *</label>
+                <input type="email" id="email" class="form-input" placeholder="ejemplo@correo.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="telefono">Teléfono *</label>
+                <input type="tel" id="telefono" class="form-input" placeholder="+52 123 456 7890" required>
+            </div>
+
+            <!-- SELECCIÓN DE TIENDA -->
+            <div class="form-group">
+                <label class="form-label">Seleccione Tienda *</label>
+                <div class="tiendas-grid" id="tiendasContainer">
+                    <!-- Opciones se llenarán con JavaScript -->
+                </div>
+                <input type="hidden" id="tiendaSeleccionada" required>
+            </div>
+
+            <!-- FECHA Y HORA -->
+            <div class="datetime-selector">
+                <div class="form-group">
+                    <label class="form-label" for="fecha">Fecha de la Cita *</label>
+                    <input type="date" id="fecha" class="form-input" min="" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Horario Disponible *</label>
+                    <div class="horarios-disponibles" id="horariosContainer">
+                        <!-- Horarios se llenarán con JavaScript -->
+                    </div>
+                    <input type="hidden" id="horaSeleccionada" required>
+                </div>
+            </div>
+
+            <!-- MOTIVO DE LA CITA -->
+            <div class="form-group">
+                <label class="form-label" for="motivo">Motivo de la Cita *</label>
+                <select id="motivo" class="form-select" required>
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="asesoramiento">Asesoramiento de Imagen Personal</option>
+                    <option value="medidas">Toma de Medidas Personalizadas</option>
+                    <option value="prueba">Prueba de Vestuario</option>
+                    <option value="evento">Preparación para Evento Especial</option>
+                    <option value="personal_shopper">Servicio de Personal Shopper</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+
+            <!-- COMENTARIOS ADICIONALES -->
+            <div class="form-group">
+                <label class="form-label" for="comentarios">Comentarios Adicionales</label>
+                <textarea id="comentarios" class="form-textarea" rows="4"
+                    placeholder="¿Algo específico que debamos saber para su cita?"></textarea>
+            </div>
+
+            <!-- RESUMEN -->
+            <div class="cita-resumen">
+                <h3 class="resumen-title">Resumen de su Cita</h3>
+                <div class="resumen-item">
+                    <span class="resumen-label">Tienda:</span>
+                    <span class="resumen-value" id="resumenTienda">No seleccionada</span>
+                </div>
+                <div class="resumen-item">
+                    <span class="resumen-label">Fecha:</span>
+                    <span class="resumen-value" id="resumenFecha">No seleccionada</span>
+                </div>
+                <div class="resumen-item">
+                    <span class="resumen-label">Hora:</span>
+                    <span class="resumen-value" id="resumenHora">No seleccionada</span>
+                </div>
+                <div class="resumen-item">
+                    <span class="resumen-label">Servicio:</span>
+                    <span class="resumen-value" id="resumenServicio">No seleccionado</span>
+                </div>
+            </div>
+
+            <!-- BOTÓN DE ENVÍO -->
+            <button type="submit" class="btn-cita" id="submitBtn">
+                CONFIRMAR CITA EXCLUSIVA
+            </button>
+
+            <!-- MENSAJES DE ESTADO -->
+            <div class="success-message" id="successMessage">
+                <h3>✅ Cita Confirmada</h3>
+                <p>Su cita ha sido agendada exitosamente. Recibirá un correo de confirmación en breve.</p>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <h3>Error al Agendar</h3>
+                <p id="errorText">Ha ocurrido un error. Por favor, intente nuevamente.</p>
+            </div>
+        </form>
+    </div>
+
+    <!-- MAPA Y UBICACIONES -->
+    <div class="cita-mapa">
+        <h2 class="form-title">Nuestras Tiendas Selectas</h2>
+        <p style="color: var(--plateado-suave); margin-bottom: 20px;">
+            Seleccione una ubicación para una experiencia de lujo personalizada.
+        </p>
+
+        <!-- MAPA (Placeholder por ahora) -->
+        <div class="mapa-container">
+            <div class="mapa-placeholder">
+                <span class="mapa-icon"></span>
+                <h3 style="color: var(--blanco-puro); margin-bottom: 10px;">Mapa de Ubicaciones</h3>
+                <p style="text-align: center; max-width: 300px;">
+                    Las ubicaciones exactas se mostrarán aquí cuando seleccione una tienda
+                </p>
+            </div>
+        </div>
+
+        <!-- INFORMACIÓN DE LA TIENDA SELECCIONADA -->
+        <div id="tiendaInfo" style="margin-top: 30px; display: none;">
+            <h3 style="color: var(--oro-metalico); margin-bottom: 15px;">Información de la Tienda</h3>
+            <div style="color: var(--plateado-suave);">
+                <p><strong>Dirección:</strong> <span id="infoDireccion"></span></p>
+                <p><strong>Horario:</strong> <span id="infoHorario"></span></p>
+                <p><strong>Teléfono:</strong> <span id="infoTelefono"></span></p>
+                <p><strong>Servicios:</strong> <span id="infoServicios"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BOTÓN DE VOLVER -->
+<div style="text-align: center; padding: 40px 20px;">
+    <a href="{% url 'menu' %}" class="btn-volver-cita">← Volver al Inicio</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ========== CONFIGURACIÓN INICIAL ==========
+        const fechaInput = document.getElementById('fecha');
+        const hoy = new Date();
+        const manana = new Date(hoy);
+        manana.setDate(hoy.getDate() + 1);
+
+        const csrftoken = getCSRFToken();  // ¡Ahora esta función existe!
+        ;
+
+        // Establecer fecha mínima (mañana) y valor por defecto
+        fechaInput.min = manana.toISOString().split('T')[0];
+        fechaInput.value = manana.toISOString().split('T')[0];
+
+        // ========== DATOS SIMULADOS ==========
+        const tiendas = [
+            {
+                id: 'escuela',
+                nombre: 'Campus Élite',
+                direccion: 'Calle Conocimiento 123, Zona Educativa, Ciudad',
+                telefono: '+52 555 123 4567',
+                horario: 'Lun-Vie: 9:00 AM - 6:00 PM, Sáb: 10:00 AM - 2:00 PM',
+                servicios: ['Asesoría Personal', 'Pruebas Exclusivas', 'VIP Lounge'],
+                icono: '🏛️'
+            },
+            {
+                id: 'boutique_centro',
+                nombre: 'Boutique Centro Histórico',
+                direccion: 'Av. Elegancia 456, Centro, Ciudad',
+                telefono: '+52 555 987 6543',
+                horario: 'Lun-Sáb: 10:00 AM - 8:00 PM, Dom: 11:00 AM - 6:00 PM',
+                servicios: ['Personal Shopper', 'Alteraciones', 'Entrega Express'],
+                icono: '🏢'
+            },
+            {
+                id: 'plaza_lujo',
+                nombre: 'Plaza del Lujo',
+                direccion: 'Plaza Diamante 789, Zona Rosa, Ciudad',
+                telefono: '+52 555 456 7890',
+                horario: 'Todos los días: 11:00 AM - 9:00 PM',
+                servicios: ['Bar de Champán', 'Traslado VIP', 'Suite Privada'],
+                icono: '💎'
+            }
+        ];
+
+        const horariosDisponibles = [
+            '09:00', '10:00', '11:00', '12:00',
+            '13:00', '14:00', '15:00', '16:00', '17:00'
+        ];
+
+        // ========== ELEMENTOS DOM ==========
+        const tiendasContainer = document.getElementById('tiendasContainer');
+        const tiendaSeleccionadaInput = document.getElementById('tiendaSeleccionada');
+        const tiendaInfoDiv = document.getElementById('tiendaInfo');
+        const horariosContainer = document.getElementById('horariosContainer');
+        const horaSeleccionadaInput = document.getElementById('horaSeleccionada');
+        const citaForm = document.getElementById('citaForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        // ========== FUNCIONES AUXILIARES ==========
+        function formatearFecha(fechaStr) {
+            const fecha = new Date(fechaStr);
+            return fecha.toLocaleDateString('es-MX', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function mostrarLoading(mostrar) {
+            if (mostrar) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('loading');
+                submitBtn.textContent = '';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                submitBtn.textContent = 'CONFIRMAR CITA EXCLUSIVA';
+            }
+        }
+
+        function mostrarError(mensaje) {
+            errorText.textContent = mensaje;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function mostrarExito(mensaje, datos) {
+            successMessage.innerHTML = mensaje;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        // ========== CARGAR TIENDAS ==========
+        function cargarTiendas() {
+            tiendasContainer.innerHTML = '';
+
+            tiendas.forEach((tienda, index) => {
+                const tiendaDiv = document.createElement('div');
+                tiendaDiv.className = 'tienda-option';
+                tiendaDiv.dataset.id = tienda.id;
+
+                tiendaDiv.innerHTML = `
+                    <span class="tienda-icon">${tienda.icono}</span>
+                    <h4 class="tienda-nombre">${tienda.nombre}</h4>
+                    <p class="tienda-direccion">${tienda.direccion}</p>
+                    <small style="color: var(--oro-metalico);">${tienda.servicios.length} servicios exclusivos</small>
+                `;
+
+                tiendaDiv.addEventListener('click', () => seleccionarTienda(tienda, tiendaDiv));
+
+                tiendasContainer.appendChild(tiendaDiv);
+
+                // Seleccionar primera tienda por defecto
+                if (index === 0) {
+                    setTimeout(() => seleccionarTienda(tienda, tiendaDiv), 100);
+                }
+            });
+        }
+
+        function seleccionarTienda(tienda, elemento) {
+            // Remover selección anterior
+            document.querySelectorAll('.tienda-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Aplicar selección nueva
+            elemento.classList.add('selected');
+            tiendaSeleccionadaInput.value = tienda.id;
+
+            // Actualizar resumen
+            document.getElementById('resumenTienda').textContent = tienda.nombre;
+
+            // Mostrar información detallada
+            document.getElementById('infoDireccion').textContent = tienda.direccion;
+            document.getElementById('infoHorario').textContent = tienda.horario;
+            document.getElementById('infoTelefono').textContent = tienda.telefono;
+            document.getElementById('infoServicios').textContent = tienda.servicios.join(', ');
+            tiendaInfoDiv.style.display = 'block';
+
+            // Actualizar horarios disponibles para esta tienda
+            actualizarHorariosDisponibles();
+        }
+
+        // ========== CARGAR HORARIOS ==========
+        function cargarHorarios() {
+            horariosContainer.innerHTML = '';
+
+            // Simular algunos horarios ocupados
+            const horariosOcupados = ['12:00', '15:00']; // Estos estarán "ocupados"
+
+            horariosDisponibles.forEach(hora => {
+                const horaDiv = document.createElement('div');
+                horaDiv.className = 'hora-option';
+                horaDiv.textContent = `${hora}:00`;
+                horaDiv.dataset.hora = hora;
+
+                // Marcar algunos horarios como no disponibles
+                if (horariosOcupados.includes(hora)) {
+                    horaDiv.classList.add('disabled');
+                    horaDiv.style.cursor = 'not-allowed';
+                } else {
+                    horaDiv.addEventListener('click', () => seleccionarHora(hora, horaDiv));
+                }
+
+                horariosContainer.appendChild(horaDiv);
+            });
+
+            // Seleccionar primer horario disponible
+            setTimeout(() => {
+                const primerHorarioDisponible = document.querySelector('.hora-option:not(.disabled)');
+                if (primerHorarioDisponible) {
+                    seleccionarHora(
+                        primerHorarioDisponible.dataset.hora,
+                        primerHorarioDisponible
+                    );
+                }
+            }, 200);
+        }
+
+        function seleccionarHora(hora, elemento) {
+            // Remover selección anterior
+            document.querySelectorAll('.hora-option:not(.disabled)').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Aplicar selección nueva
+            elemento.classList.add('selected');
+            horaSeleccionadaInput.value = hora;
+
+            // Actualizar resumen
+            document.getElementById('resumenHora').textContent = `${hora}:00`;
+        }
+
+        function actualizarHorariosDisponibles() {
+            // En una implementación real, aquí harías una petición AJAX
+            // para obtener horarios disponibles según tienda y fecha
+            console.log('Actualizando horarios para tienda:', tiendaSeleccionadaInput.value);
+        }
+
+        // ========== ACTUALIZAR RESUMEN ==========
+        function configurarActualizacionesEnTiempoReal() {
+            // Fecha
+            fechaInput.addEventListener('change', function () {
+                const fechaFormateada = formatearFecha(this.value);
+                document.getElementById('resumenFecha').textContent = fechaFormateada;
+                actualizarHorariosDisponibles();
+            });
+
+            // Motivo
+            document.getElementById('motivo').addEventListener('change', function () {
+                const textoSeleccionado = this.options[this.selectedIndex].text;
+                document.getElementById('resumenServicio').textContent = textoSeleccionado;
+            });
+
+            // Validación en tiempo real
+            const inputsRequeridos = citaForm.querySelectorAll('input[required], select[required]');
+            inputsRequeridos.forEach(input => {
+                input.addEventListener('input', validarFormulario);
+                input.addEventListener('change', validarFormulario);
+            });
+        }
+
+        function validarFormulario() {
+            const esValido = citaForm.checkValidity() &&
+                tiendaSeleccionadaInput.value &&
+                horaSeleccionadaInput.value;
+            submitBtn.disabled = !esValido;
+            return esValido;
+        }
+
+        // ========== ENVÍO DEL FORMULARIO ==========
+        function configurarEnvioFormulario() {
+            citaForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                // Validación final
+                if (!validarFormulario()) {
+                    mostrarError('Por favor, complete todos los campos requeridos.');
+                    return;
+                }
+
+                // Preparar datos
+                const citaData = {
+                    nombre: document.getElementById('nombre').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    telefono: document.getElementById('telefono').value.trim(),
+                    tienda: tiendaSeleccionadaInput.value,
+                    fecha: fechaInput.value,
+                    hora: horaSeleccionadaInput.value,
+                    motivo: document.getElementById('motivo').value,
+                    comentarios: document.getElementById('comentarios').value.trim()
+                };
+
+                // Mostrar estado de carga
+                mostrarLoading(true);
+
+                try {
+                    // Enviar a Django (AJAX)
+                    fetch("{% url 'procesar_cita' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCSRFToken()
+                        },
+                        body: JSON.stringify(citaData)
+                    })
+
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Mostrar datos REALES de MongoDB
+                                const mensajeExito = `
+                                <h3>✅ Cita #${data.cita_id.slice(-6)} Confirmada</h3>
+                                <p><strong>Cliente:</strong> ${data.data.nombre}</p>
+                                <p><strong>Fecha:</strong> ${formatearFecha(data.data.fecha)}</p>
+                                <p><strong>Hora:</strong> ${data.data.hora}:00</p>
+                                <p><strong>Ubicación:</strong> ${data.data.tienda}</p>
+                                <p><strong>Motivo:</strong> ${data.data.motivo}</p>
+                                <p><strong>Código:</strong> ${data.codigo_confirmacion}</p>
+                                <p class="text-small">✅ Guardado en MongoDB el ${new Date().toLocaleString()}</p>`;
+
+                                mostrarExito(mensajeExito);
+                            }
+                        });
+
+                } catch (error) {
+                    // Error de conexión
+                    console.error('Error de conexión:', error);
+                    mostrarError('Error de conexión. Por favor, intente nuevamente.');
+
+                } finally {
+                    mostrarLoading(false);
+                }
+            });
+        }
+
+
+        function resetearFormularioDespuesDeExito() {
+            setTimeout(() => {
+                // Resetear formulario
+                citaForm.reset();
+                successMessage.style.display = 'none';
+
+                // Restablecer selecciones
+                if (tiendasContainer.firstChild) {
+                    tiendasContainer.firstChild.click();
+                }
+
+                // Restablecer horario
+                const primerHorario = document.querySelector('.hora-option:not(.disabled)');
+                if (primerHorario) {
+                    primerHorario.click();
+                }
+
+                // Restablecer fecha
+                fechaInput.value = manana.toISOString().split('T')[0];
+                fechaInput.dispatchEvent(new Event('change'));
+
+                // Restablecer motivo
+                document.getElementById('motivo').selectedIndex = 0;
+                document.getElementById('motivo').dispatchEvent(new Event('change'));
+
+            }, 5000);
+        }
+
+        // ========== INICIALIZACIÓN ==========
+        function inicializar() {
+            cargarTiendas();
+            cargarHorarios();
+            configurarActualizacionesEnTiempoReal();
+            configurarEnvioFormulario();
+
+            // Disparar eventos iniciales
+            fechaInput.dispatchEvent(new Event('change'));
+            validarFormulario();
+
+            // Efectos visuales
+            agregarEfectosVisuales();
+        }
+
+        function agregarEfectosVisuales() {
+            // Efecto hover para tarjetas
+            document.querySelectorAll('.tienda-option').forEach(card => {
+                card.addEventListener('mouseenter', function () {
+                    if (!this.classList.contains('selected')) {
+                        this.style.transform = 'translateY(-5px)';
+                    }
+                });
+
+                card.addEventListener('mouseleave', function () {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Efecto para botón principal
+            submitBtn.addEventListener('mouseenter', function () {
+                if (!this.disabled) {
+                    this.style.transform = 'translateY(-3px)';
+                }
+            });
+
+            submitBtn.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        }
+
+        // ========== INICIAR TODO ==========
+        inicializar();
+    });
+</script>
+{% endblock %}
