@@ -3,208 +3,192 @@ body {
     font-optical-sizing: auto;
     font-style: normal;
     background-color: var(--negro-profundo);
+    color: var(--blanco-puro);
+    margin: 0;
+    padding: 0;
 }
 
+/* Variables de Colores Adaptadas (Azul y Verde) */
 :root {
     --negro-profundo: #0A0A0A;
     --blanco-puro: #FFFFFF;
-    --oro-metalico: #D4AF37;
-    --plateado-suave: #C0C0C0;
     --azul-navy: #1A1F71;
-    --burdeos-profundos: #5B0E2D;
+    --azul-brillante: #0d6efd;
     --verde-esmeralda: #046307;
+    --verde-neón: #00e676;
     --gris-carbon: #1b1a1a;
+    --tarjeta-bg: #111827;
+    --title2: #00e676; /* Verde vibrante para títulos */
 }
 
 /* MAIN */
 
 .title-about {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     text-align: center;
     width: 90%;
-    padding: 30px;
+    padding: 30px 10px;
     margin: auto;
 }
 
 .title-about h2 {
-    color: var(--blanco-puro);
-    font-size: 50px;
-    font-weight: normal;
+    color: var(--verde-neón);
+    font-size: 45px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 230, 118, 0.3);
 }
 
-
 .contenedor {
-    background-color: whitesmoke;
-    border-radius: 10px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    background-color: var(--gris-carbon);
+    border: 1px solid var(--azul-navy);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(26, 31, 113, 0.4);
     width: 90%;
+    max-width: 1200px;
     padding: 30px;
-    margin: 50px auto;
+    margin: 30px auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
 }
 
 .sub-cont {
     display: flex;
     width: 100%;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 30px;
 }
 
-.about-us {
-    display: block;
-    width: 100%;
-    justify-content: flex-end;
-    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.7);
+/* TARJETAS DE SECCIÓN */
+
+.about-us, .mision, .valores {
+    background-color: var(--tarjeta-bg);
+    border-left: 5px solid var(--verde-esmeralda);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
     border-radius: 10px;
-    align-items: center;
-    padding: 20px;
-    margin: 20px
+    padding: 25px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.titulo {
+.about-us:hover, .mision:hover, .valores:hover {
+    transform: translateY(-5px);
+    border-left-color: var(--verde-neón);
+}
+
+/* TÍTULOS DE SECCIONES */
+
+.titulo, .titulo2, .titulo3 {
     display: flex;
     width: 100%;
-    padding: 0 20px;
+    margin-bottom: 15px;
 }
 
-.titulo h2 {
+.titulo h2, .titulo2 h2, .titulo3 h2 {
     color: var(--title2);
-    font-size: 40px;
+    font-size: 32px;
+    margin: 0;
 }
 
-.info {
+/* CONTENIDOS Y TEXTOS */
+
+.info, .desc, .info3 {
     display: flex;
     width: 100%;
-    padding: 30px 10px;
-    text-align: start;
+    gap: 25px;
     align-items: center;
     justify-content: space-between;
 }
 
-.info p {
-    font-size: 30px;
-    width: 70%;
+.info p, .desc p, .info3 p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--blanco-puro);
+    flex: 1;
+    margin: 0;
 }
 
-.img {
-    display: grid;
-    place-items: center;
-    width: 30%;
-}
+/* IMÁGENES */
 
-.img img {
-    width: 200px;
-    background-color: #191C32;
-    padding: 20px 20px;
-    border-radius: 10px;
-}
-
-.mision {
-    display: block;
-    width: 100%;
-    justify-content: flex-end;
-    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.7);
-    border-radius: 10px;
-    align-items: center;
-    padding: 20px;
-    margin: 20px
-}
-
-.titulo2 {
-    display: flex;
-    justify-content: flex-end;
-    width: 98%;
-    padding: 0 20px;
-}
-
-.titulo2 h2 {
-    color: var(--title2);
-    font-size: 40px;
-}
-
-.desc {
-    display: flex;
-    justify-content: flex-end;
-    text-align: end;
-    align-items: center;
-    width: 100%;
-    padding: 30px 10px;
-}
-
-.img2 {
+.img, .img2, .img3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
+    flex-shrink: 0;
 }
 
-.img2 img {
-    width: 200px;
-    background-color: #191C32;
-    padding: 20px 20px;
+.img img, .img2 img, .img3 img {
+    width: 160px;
+    height: auto;
+    background-color: var(--azul-navy);
+    padding: 15px;
     border-radius: 10px;
-}
-
-.desc p {
-    font-size: 29px;
-    width: 100%;
-}
-
-/* hola */
-
-
-.valores {
-    display: block;
-    width: 100%;
-    justify-content: space-between;
-    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.7);
-    border-radius: 10px;
-    padding: 20px;
-    margin: 20px
-}
-
-.titulo3 {
-    display: flex;
-    justify-content: flex-start;
-    width: 100%;
-    padding: 0 20px;
-}
-
-.titulo3 h2 {
-    color: var(--title2);
-    font-size: 40px;
-}
-
-.info3 {
-    display: flex;
-    justify-content: flex-start;
-    text-align: start;
-    align-items: center;
-    width: 100%;
-    padding: 30px 10px;
-}
-
-.info3 p {
-    font-size: 30px;
-    width: 100%;
+    border: 2px solid var(--verde-esmeralda);
 }
 
 
-.img3 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
+/* ==========================================
+   MEDIA QUERIES (RESPONSIVIDAD)
+   ========================================== */
+
+/* Tablets y pantallas medianas (<= 992px) */
+@media (max-width: 992px) {
+    .contenedor {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .title-about h2 {
+        font-size: 36px;
+    }
+
+    .titulo h2, .titulo2 h2, .titulo3 h2 {
+        font-size: 26px;
+    }
+
+    .info p, .desc p, .info3 p {
+        font-size: 16px;
+    }
+
+    .img img, .img2 img, .img3 img {
+        width: 130px;
+    }
 }
 
-.img3 img {
-    width: 200px;
-    background-color: #191C32;
-    padding: 20px 20px;
-    border-radius: 10px;
+/* Móviles y pantallas pequeñas (<= 768px) */
+@media (max-width: 768px) {
+    .title-about h2 {
+        font-size: 28px;
+    }
+
+    /* Cambiar distribución horizontal a vertical */
+    .info, .desc, .info3 {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    /* Invertir el orden para Misión si quieres la imagen arriba */
+    .desc {
+        flex-direction: column-reverse;
+    }
+
+    .titulo, .titulo2, .titulo3 {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .info p, .desc p, .info3 p {
+        width: 100%;
+        text-align: center;
+    }
+
+    .img, .img2, .img3 {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .img img, .img2 img, .img3 img {
+        width: 120px;
+    }
 }

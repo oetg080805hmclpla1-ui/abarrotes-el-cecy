@@ -46,4 +46,7 @@ urlpatterns = [
     path('agendar-cita/', views.agendar_cita, name='agendar_cita'),
     path('api/procesar-cita/', views.procesar_cita, name='procesar_cita'),
     path('api/horarios-disponibles/', views.obtener_horarios_disponibles, name='horarios_disponibles'),
+
+    path('acerca/', views.acerca_de, name='acerca_de'),
+
 ]

@@ -986,3 +986,6 @@ def procesar_cita(request):
 def obtener_horarios_disponibles(request):
     horarios = ["09:00", "10:00", "11:00", "12:00", "16:00", "17:00"]
     return JsonResponse({"success": True, "horarios": horarios})
+
+def acerca_de(request):
+    return render(request, 'acerca.html')

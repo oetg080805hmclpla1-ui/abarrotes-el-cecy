@@ -25,40 +25,42 @@
 
     <header>
         <nav class="navbar reveal-left" id="navbar">
-            <a href="/" class="titulo-marca">
-                <h1>Abarrotes el cecy</h1>
-            </a>
-            <div class="search reveal-fade">
-                <form method="get" action="{% url 'plantilla' %}">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" name="produc-search" placeholder="Ingrese nombre del producto.">
-                </form>
-            </div>
-            <div class="enlaces reveal-fade">
+    <a href="/" class="titulo-marca">
+        <h1>Abarrotes el cecy</h1>
+    </a>
+    <div class="search reveal-fade">
+        <form method="get" action="{% url 'plantilla' %}">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" name="produc-search" placeholder="Ingrese nombre del producto.">
+        </form>
+    </div>
+    <div class="enlaces reveal-fade">
 
-                <a href="{% url 'carrito' %}" class="nav-link">
-                    <i class="fas fa-shopping-cart"></i>
-                    {% if carrito_count > 0 %}
-                    <span class="badge bg-danger">{{ carrito_count }}</span>
-                    {% endif %}
-                </a>
+        <a href="{% url 'carrito' %}" class="nav-link">
+            <i class="fas fa-shopping-cart"></i>
+            {% if carrito_count > 0 %}
+            <span class="badge bg-danger">{{ carrito_count }}</span>
+            {% endif %}
+        </a>
 
-                <div class="dropdown-account reveal-fade">
-                    <p><i class="fa-solid fa-user"></i> Cuenta <span></span></p>
-                    <ul class="effect">
-                        {% if request.session.gmail %}
-                        <li><a href="/perfil">Mi perfil</a></li>
-                        <li><a href="/soporte">Ayuda</a></li>
-                        <li><a href="/cerrar">Cerrar sesión</a></li>
-                        {% else %}
-                        <li><a href="/index">Iniciar sesión</a></li>
-                        <li><a href="/registro">Crear cuenta</a></li>
-                        <li><a href="/soporte">Ayuda</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <div class="dropdown-account reveal-fade">
+            <p><i class="fa-solid fa-user"></i> Cuenta <span></span></p>
+            <ul class="effect">
+                {% if request.session.gmail %}
+                <li><a href="/perfil">Mi perfil</a></li>
+                <li><a href="/soporte">Ayuda</a></li>
+                <li><a href="{% url 'acerca_de' %}">Acerca de</a></li>
+                <li><a href="/cerrar">Cerrar sesión</a></li>
+                {% else %}
+                <li><a href="/index">Iniciar sesión</a></li>
+                <li><a href="/registro">Crear cuenta</a></li>
+                <li><a href="/soporte">Ayuda</a></li>
+                <li><a href="{% url 'acerca_de' %}">Acerca de</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
 
         <div class="categorias reveal-fade">
             <div class="nav-categorias reveal-fade">
